@@ -30,12 +30,12 @@ export function getCategoryMetadata(category: string) {
 // Header Links, src/components/Header.astro
 export const HeaderLinks = [
   { href: "/category/One/1/", title: "Blog Posts" },
+  { href: "/tags/", title: "Sort by Tags" },
 ];
 
 // Footer Links, src/components/Footer.astro
 export const FooterLinks = [
   { href: "https://sky.cs.berkeley.edu/", title: "Sky Computing Lab @ Berkeley" },
-  { href: "/tags/", title: "Tags" },
 ];
 
 // Social Links, src/components/Footer.astro
