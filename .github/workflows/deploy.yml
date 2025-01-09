@@ -14,26 +14,19 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
-    # Step 2: Set up Node.js and npm
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18' # Specify Node.js version
-        cache: 'npm' # Cache npm dependencies for faster builds
+    # Step 2: Set up pnpm
+    steps:
+      - uses: pnpm/action-setup@v4
 
-    # Step 3: Install pnpm globally
-    - name: Install pnpm
-      run: npm install -g pnpm
-
-    # Step 4: Install project dependencies
+    # Step 3: Install project dependencies
     - name: Install Dependencies
       run: pnpm install
 
-    # Step 5: Build the Astro project
+    # Step 4: Build the Astro project
     - name: Build Project
       run: pnpm run build
 
-    # Step 6: Deploy to GitHub Pages
+    # Step 5: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
