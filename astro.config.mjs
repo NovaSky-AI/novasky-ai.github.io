@@ -10,7 +10,7 @@ import tailwind from "@astrojs/tailwind";
 // https://astro.build/config
 export default defineConfig({
   site: "https://novasky-ai.github.io/",
-  base: "",
+  // base: "",
   trailingSlash: "always",
   prefetch: {
     prefetchAll: true,
