@@ -1,0 +1,51 @@
+---
+import Link from "@components/Links.astro";
+import { Icon } from "astro-icon/components";
+import { SITE_TITLE, HeaderLinks } from "@consts";
+---
+
+<header class="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full py-7">
+  <nav class="relative max-w-7xl w-full flex flex-wrap md:grid md:grid-cols-12 basis-full items-center px-4 mx-auto" aria-label="Global">
+    <div class="md:col-span-3">
+      <a class="flex-none text-xl font-semibold text-neutral-900 hover:text-neutral-600 dark:text-neutral-400 dark:hover:text-neutral-200" href="/" aria-label="Astroverse">
+        {SITE_TITLE}
+      </a>
+    </div>
+
+    <div class="flex items-center gap-x-2 ms-auto py-1 md:ps-6 md:order-3 md:col-span-3">
+      <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-xl border border-transparent text-black hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 transition disabled:opacity-50 disabled:pointer-events-none" onclick="window.location.href='/search/'">
+        <Icon name="tabler:search" class="icon-base" />
+      </button>
+
+      <button type="button" class="hs-dark-mode hs-dark-mode-active:hidden inline-flex items-center gap-x-2 py-2 px-3 rounded-full text-sm text-black hover:bg-white/20" data-hs-theme-click-value="dark">
+        <Icon name="tabler:sun-filled" class="icon-base" />
+      </button>
+      <button type="button" class="hs-dark-mode hs-dark-mode-active:inline-flex hidden items-center gap-x-2 py-2 px-3 rounded-full text-sm text-white hover:bg-white/20" data-hs-theme-click-value="light">
+        <Icon name="tabler:moon-filled" class="icon-base" />
+      </button>
+
+      <div class="md:hidden">
+        <button type="button" class="hs-collapse-toggle size-[38px] flex justify-center items-center text-sm font-semibold rounded-xl text-black hover:bg-neutral-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-neutral-700" data-hs-collapse="#navbar-collapse-with-animation" aria-controls="navbar-collapse-with-animation" aria-label="Toggle navigation">
+          <Icon name="tabler:menu-2" class="hs-collapse-open:hidden flex-shrink-0 size-4"></Icon>
+          <Icon name="tabler:menu-order" class="hs-collapse-open:block hidden flex-shrink-0 size-4"></Icon>
+        </button>
+      </div>
+      
+    </div>
+
+    <div id="navbar-collapse-with-animation" class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow md:block md:w-auto md:basis-auto md:order-2 md:col-span-6">
+      <div class="flex flex-col gap-y-4 gap-x-0 mt-5 md:flex-row md:justify-center md:items-center md:gap-y-0 md:gap-x-7 md:mt-0">
+        {
+          HeaderLinks.map((link) => (
+            <Link
+              href={link.href}
+              class="px-4 py-3 font-medium text-neutral-900 hover:text-neutral-600 dark:text-neutral-400 dark:hover:text-neutral-200"
+            >
+              {link.title}
+            </Link>
+          ))
+        }
+      </div>
+    </div>
+  </nav>
+</header>
