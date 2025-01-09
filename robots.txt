@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://novasky-ai.github.io/sitemap-index.xml
