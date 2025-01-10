@@ -1,7 +1,7 @@
 ---
 title: "Sky-T1: Train your own O1 preview model within $450"
 slug: sky-t1
-description: In this blog post, we share our journey to reproduce the OpenAI o1 reasoning model.
+description: "We introduce Sky-T1-32B-Preview, our reasoning model that performs on par with o1-preview on popular reasoning and coding benchmarks."
 category:
   - One
 tags:
