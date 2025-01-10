@@ -26,7 +26,7 @@ In response, a few notable efforts have emerged to train open-weight reasoning m
 To ensure our work benefits the broader community, we are fully committed to open-source collaboration. We open-source all details (i.e., data, codes, model weights) to enable the community to replicate and improve on our results *easily*:
  - [**Infrastructure**](https://github.com/NovaSky-AI/SkyThought): to build the data, train, and evaluate the model in a single repository.
  - [**Data**](https://github.com/NovaSky-AI/SkyThought): 17K data used to train Sky-T1-32B-Preview.
- - [**Technical details**](https://novasky-ai.github.io/posts/sky-t1): Our technical [report](https://novasky-ai.github.io/posts/sky-t1/) with a [wandb log](https://wandb.ai/sky-posttraining-uc-berkeley/huggingface/reports/Sky-T1-Training--VmlldzoxMDg3ODE4Nw).
+ - [**Technical details**](https://novasky-ai.github.io/posts/sky-t1): Our technical [report](https://novasky-ai.github.io/posts/sky-t1/) with a [wandb log](https://api.wandb.ai/links/sky-posttraining-uc-berkeley/wjg3sybl).
  - [**Model weights**](https://huggingface.co/NovaSky-AI): Our 32B model weight.
 
 <table>
