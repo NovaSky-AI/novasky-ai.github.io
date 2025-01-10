@@ -4,7 +4,7 @@
 // Base Page Metadata, src/layouts/BaseLayout.astro
 export const BRAND_NAME = "NovaSky";
 export const SITE_TITLE = "NovaSky";
-export const SITE_DESCRIPTION = "An amazing team!";
+export const SITE_DESCRIPTION = "Next-generation Open Vision and AI @ Berkeley Sky Computing Lab";
 
 // Tags Page Metadata, src/pages/tags/index.astro
 export const Tags_TITLE = "NovaSky - All Tags";
