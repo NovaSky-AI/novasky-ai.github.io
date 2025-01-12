@@ -1,4 +1,100 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>NovaSky</title><description>Next-generation Open Vision and AI @ Berkeley Sky Computing Lab</description><link>https://novasky-ai.github.io/</link><language>en-US</language><item><title>Sky-T1: Train your own O1 preview model within $450</title><link>https://novasky-ai.github.io/posts/sky-t1/</link><guid isPermaLink="true">https://novasky-ai.github.io/posts/sky-t1/</guid><description>We introduce Sky-T1-32B-Preview, our reasoning model that performs on par with o1-preview on popular reasoning and coding benchmarks.</description><pubDate>Fri, 10 Jan 2025 00:00:00 GMT</pubDate><content:encoded>We introduce Sky-T1-32B-Preview, our reasoning model that performs on par with o1-preview on popular reasoning and coding benchmarks. **Remarkably, Sky-T1-32B-Preview was trained for less than $450, demonstrating that it is possible to replicate high-level reasoning capabilities affordably and efficiently.** All [code](https://github.com/NovaSky-AI/SkyThought) is open-source. 
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>NovaSky</title><description>Next-generation Open Vision and AI @ Berkeley Sky Computing Lab</description><link>https://novasky-ai.github.io/</link><language>en-US</language><item><title>About Us</title><link>https://novasky-ai.github.io/posts/about-us/</link><guid isPermaLink="true">https://novasky-ai.github.io/posts/about-us/</guid><description>About NovaSky</description><pubDate>Fri, 10 Jan 2025 00:00:00 GMT</pubDate><content:encoded>NovaSky (Next-generation Open Vision and AI) is a collaborative initiative led by students and advisors at UC Berkeley’s Sky Computing Lab. We aim to build the next-generation AI models that are SoTA, open-source and affordable for everyone. 
+
+### Team
+
+&lt;table style=&quot;table-layout: fixed; width: 100%; border-collapse: collapse;&quot;&gt;
+  &lt;tr&gt;
+    &lt;td style=&quot;width: 25%; text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
+      &lt;img 
+        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/dacheng-profile.jpg&quot; 
+        width=&quot;100&quot; 
+        style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot; 
+      /&gt;&lt;br&gt;
+      &lt;strong&gt;&lt;a href=&quot;https://dachengli1.github.io/&quot;&gt;Dacheng Li&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+      &lt;em&gt;Student Lead&lt;/em&gt;
+    &lt;/td&gt;
+    &lt;td style=&quot;width: 25%; text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
+      &lt;img 
+        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/IMG_9026.jpeg&quot; 
+        width=&quot;100&quot; 
+        style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot; 
+      /&gt;&lt;br&gt;
+      &lt;strong&gt;&lt;a href=&quot;https://shiyicao.com&quot;&gt;Shiyi Cao&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+      &lt;em&gt;Student Lead&lt;/em&gt;
+    &lt;/td&gt;
+    &lt;td style=&quot;width: 25%; text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
+      &lt;img
+        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/shu-profile.jpg&quot;
+        width=&quot;100&quot;
+        style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot;
+      /&gt;&lt;br&gt;
+      &lt;strong&gt;&lt;a href=&quot;https://www.linkedin.com/in/slynl/&quot;&gt;Shu Liu&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+      &lt;em&gt;Student Lead&lt;/em&gt;
+    &lt;/td&gt;
+    &lt;td style=&quot;width: 25%; text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
+      &lt;img
+        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/tyler_profile.png&quot;
+        width=&quot;100&quot;
+        style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot;
+      /&gt;&lt;br&gt;
+      &lt;strong&gt;&lt;a href=&quot;https://tyler-griggs.github.io/&quot;&gt;Tyler Griggs&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+      &lt;em&gt;Student Lead&lt;/em&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+
+  &lt;tr&gt;
+    &lt;td style=&quot;text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
+      &lt;img
+        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/simon-profile.jpg&quot;
+        width=&quot;100&quot;
+        style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot;
+      /&gt;&lt;br&gt;
+      &lt;strong&gt;&lt;a href=&quot;https://github.com/simon-mo&quot;&gt;Simon Mo&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+      &lt;em&gt;Student&lt;/em&gt;
+    &lt;/td&gt;
+    &lt;td style=&quot;text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
+      &lt;img
+        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/shishir-profile.jpg&quot;
+        width=&quot;100&quot;
+        style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot;
+      /&gt;&lt;br&gt;
+      &lt;strong&gt;&lt;a href=&quot;https://shishirpatil.github.io/&quot;&gt;Shishir G. Patil&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+      &lt;em&gt;Advisor&lt;/em&gt;
+    &lt;/td&gt;
+    &lt;td style=&quot;text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
+      &lt;img
+        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/joey-profile.jpg&quot;
+        width=&quot;100&quot;
+        style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot;
+      /&gt;&lt;br&gt;
+      &lt;strong&gt;&lt;a href=&quot;https://people.eecs.berkeley.edu/~jegonzal/&quot;&gt;Joseph E. Gonzalez&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+      &lt;em&gt;Advisor&lt;/em&gt;
+    &lt;/td&gt;
+    &lt;td style=&quot;text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
+      &lt;img
+        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/ion-profile.png&quot;
+        width=&quot;100&quot;
+        style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot;
+      /&gt;&lt;br&gt;
+      &lt;strong&gt;&lt;a href=&quot;https://people.eecs.berkeley.edu/~istoica/&quot;&gt;Ion Stoica&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+      &lt;em&gt;Advisor&lt;/em&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+
+
+
+
+
+### Acknowledgement
+Members are funded by the [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/). The compute resources are also generously supported by [Lambda Labs](https://lambdalabs.com/) and [Anyscale](https://www.anyscale.com/).
+
+### Contact
+X: [@NovaSkyAI](https://x.com/NovaSkyAI)
+
+
+Email: novasky.berkeley@gmail.com</content:encoded></item><item><title>Sky-T1: Train your own O1 preview model within $450</title><link>https://novasky-ai.github.io/posts/sky-t1/</link><guid isPermaLink="true">https://novasky-ai.github.io/posts/sky-t1/</guid><description>We introduce Sky-T1-32B-Preview, our reasoning model that performs on par with o1-preview on popular reasoning and coding benchmarks.</description><pubDate>Fri, 10 Jan 2025 00:00:00 GMT</pubDate><content:encoded>We introduce Sky-T1-32B-Preview, our reasoning model that performs on par with o1-preview on popular reasoning and coding benchmarks. **Remarkably, Sky-T1-32B-Preview was trained for less than $450, demonstrating that it is possible to replicate high-level reasoning capabilities affordably and efficiently.** All [code](https://github.com/NovaSky-AI/SkyThought) is open-source. 
 
 ![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/sky-t1/Sky-T1-pipeline.jpg)
 
