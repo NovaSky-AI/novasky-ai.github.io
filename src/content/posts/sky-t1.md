@@ -13,7 +13,7 @@ coverAlt: Blue Bird
 author: NovaSky Team
 ---
 
-We introduce Sky-T1-32B-Preview, our reasoning model that performs on par with o1-preview on popular reasoning and coding benchmarks. **Remarkably, Sky-T1-32B-Preview was trained for less than $450, demonstrating that it is possible to replicate high-level reasoning capabilities affordably and efficiently.**
+We introduce Sky-T1-32B-Preview, our reasoning model that performs on par with o1-preview on popular reasoning and coding benchmarks. **Remarkably, Sky-T1-32B-Preview was trained for less than $450, demonstrating that it is possible to replicate high-level reasoning capabilities affordably and efficiently.** All [code](https://github.com/NovaSky-AI/SkyThought) is open-source. 
 
 ![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/sky-t1/Sky-T1-pipeline.jpg)
 
