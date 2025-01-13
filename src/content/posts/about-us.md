@@ -6,7 +6,7 @@ category:
   - One
 tags:
   - Sky Computing
-pubDate: 2025-01-10
+pubDate: 2025-01-01
 cover: https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/novasky3.jpg
 coverAlt: About
 author: NovaSky Team
