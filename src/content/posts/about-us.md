@@ -47,7 +47,7 @@ NovaSky (Next-generation Open Vision and AI) is a collaborative initiative led b
     </td>
     <td style="width: 25%; text-align: center; vertical-align: middle; height: 150px;">
       <img
-        src="https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/tyler_profile.png"
+        src="https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/tyler-profile.png"
         width="100"
         style="display: block; margin: 0 auto; border-radius:50%;"
       /><br>
