@@ -47,9 +47,14 @@ export const SocialLinks = [
     label: "Twitter",
   },
   {
-    href: "https://github.com/NovaSky-AI",
+    href: "https://github.com/NovaSky-AI/SkyThought",
     icon: "tabler:brand-github",
     label: "GitHub",
+  },
+  {
+    href: "https://discord.gg/RBAjeWSA", // Replace with your actual Discord invite link
+    icon: "tabler:brand-discord",
+    label: "Discord",
   },
 ];
 
