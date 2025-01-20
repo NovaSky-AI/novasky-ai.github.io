@@ -118,5 +118,6 @@ Members are funded by the [Berkeley Sky Computing Lab](https://sky.cs.berkeley.e
 ### Contact
 X: [@NovaSkyAI](https://x.com/NovaSkyAI)
 
-
 Email: novasky.berkeley@gmail.com
+
+Github: [SkyThought](https://github.com/NovaSky-AI/SkyThought)

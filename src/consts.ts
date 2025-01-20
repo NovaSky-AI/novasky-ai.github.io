@@ -47,7 +47,7 @@ export const SocialLinks = [
     label: "Twitter",
   },
   {
-    href: "https://github.com/NovaSky-AI",
+    href: "https://github.com/NovaSky-AI/SkyThought",
     icon: "tabler:brand-github",
     label: "GitHub",
   },
