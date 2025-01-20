@@ -120,4 +120,6 @@ X: [@NovaSkyAI](https://x.com/NovaSkyAI)
 
 Email: novasky.berkeley@gmail.com
 
+Discord: [NovaSky @ Berkeley](https://discord.com/invite/RBAjeWSA)
+
 Github: [SkyThought](https://github.com/NovaSky-AI/SkyThought)
