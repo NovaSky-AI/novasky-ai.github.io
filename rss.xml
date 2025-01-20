@@ -186,7 +186,7 @@ This work is done at [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/),
     &lt;/td&gt;
     &lt;td style=&quot;width: 25%; text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
       &lt;img 
-        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/IMG_9026.jpeg&quot; 
+        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/9026-profile.jpg&quot; 
         width=&quot;100&quot; 
         style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot; 
       /&gt;&lt;br&gt;
@@ -204,7 +204,7 @@ This work is done at [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/),
     &lt;/td&gt;
     &lt;td style=&quot;width: 25%; text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
       &lt;img
-        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/tyler_profile.png&quot;
+        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/tyler-profile.jpg&quot;
         width=&quot;100&quot;
         style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot;
       /&gt;&lt;br&gt;
@@ -234,6 +234,15 @@ This work is done at [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/),
     &lt;/td&gt;
     &lt;td style=&quot;text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
       &lt;img
+        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/matei-profile.jpg&quot;
+        width=&quot;100&quot;
+        style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot;
+      /&gt;&lt;br&gt;
+      &lt;strong&gt;&lt;a href=&quot;https://people.eecs.berkeley.edu/~matei/&quot;&gt;Matei Zaharia&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+      &lt;em&gt;Advisor&lt;/em&gt;
+    &lt;/td&gt;
+    &lt;td style=&quot;text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
+      &lt;img
         src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/joey-profile.jpg&quot;
         width=&quot;100&quot;
         style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot;
@@ -241,16 +250,18 @@ This work is done at [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/),
       &lt;strong&gt;&lt;a href=&quot;https://people.eecs.berkeley.edu/~jegonzal/&quot;&gt;Joseph E. Gonzalez&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
       &lt;em&gt;Advisor&lt;/em&gt;
     &lt;/td&gt;
-    &lt;td style=&quot;text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
-      &lt;img
-        src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/ion-profile.png&quot;
-        width=&quot;100&quot;
-        style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot;
-      /&gt;&lt;br&gt;
-      &lt;strong&gt;&lt;a href=&quot;https://people.eecs.berkeley.edu/~istoica/&quot;&gt;Ion Stoica&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
-      &lt;em&gt;Advisor&lt;/em&gt;
-    &lt;/td&gt;
   &lt;/tr&gt;
+&lt;tr&gt;
+  &lt;td style=&quot;text-align: center; vertical-align: middle; height: 150px;&quot;&gt;
+    &lt;img
+      src=&quot;https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/about-us/ion-profile.jpg&quot;
+      width=&quot;100&quot;
+      style=&quot;display: block; margin: 0 auto; border-radius:50%;&quot;
+    /&gt;&lt;br&gt;
+    &lt;strong&gt;&lt;a href=&quot;https://people.eecs.berkeley.edu/~istoica/&quot;&gt;Ion Stoica&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+    &lt;em&gt;Advisor&lt;/em&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
 &lt;/table&gt;
 
 
@@ -264,5 +275,8 @@ Members are funded by the [Berkeley Sky Computing Lab](https://sky.cs.berkeley.e
 ### Contact
 X: [@NovaSkyAI](https://x.com/NovaSkyAI)
 
+Email: novasky.berkeley@gmail.com
 
-Email: novasky.berkeley@gmail.com</content:encoded></item></channel></rss>
+Discord: [NovaSky @ Berkeley](https://discord.com/invite/RBAjeWSA)
+
+Github: [SkyThought](https://github.com/NovaSky-AI/SkyThought)</content:encoded></item></channel></rss>
