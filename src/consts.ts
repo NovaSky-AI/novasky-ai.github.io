@@ -51,6 +51,11 @@ export const SocialLinks = [
     icon: "tabler:brand-github",
     label: "GitHub",
   },
+  {
+    href: "https://discord.gg/RBAjeWSA", // Replace with your actual Discord invite link
+    icon: "tabler:brand-discord",
+    label: "Discord",
+  },
 ];
 
 // Search Page Metadata, src/pages/search.astro
