@@ -7,7 +7,7 @@ category:
 tags:
   - Post-Training
   - Preference-Optimization
-  - Reinforcement-Learning
+  - Reasoning
 pubDate: 2025-01-23
 cover: https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/reduce-overthinking/blue-bird-flash.jpg
 coverAlt: Blue Bird Flash
@@ -15,8 +15,8 @@ author: NovaSky Team
 ---
 **By: [Tyler Griggs](https://tyler-griggs.github.io/), [Shiyi Cao](https://shiyicao.com/), [Dacheng Li](https://dachengli1.github.io/), [Shu Liu](https://www.linkedin.com/in/slynl/), [Shishir Patil](https://shishirpatil.github.io/), [Matei Zaharia](https://people.eecs.berkeley.edu/~matei/), [Joey Gonzalez](https://people.eecs.berkeley.edu/~jegonzal/), [Ion Stoica](https://people.eecs.berkeley.edu/~istoica/) -- Jan 23, 2025**
 
-We are excited to introduce **Sky-T1-32B-Flash**, our updated reasoning language model that significantly reduces overthinking, **slashing inference costs on challenging questions by up to 57%**. This enhancement decreases generation length while preserving accuracy across domains such as mathematics, coding, science, and general knowledge, and **requires only $275 for the complete training recipe** using 8xH100s according to Lambda Cloud pricing. To foster transparency and collaboration, we have open-sourced the full pipeline—from data generation and pre-processing to reinforcement learning (RL) training and evaluation scripts—and openly provide the model weights and data.
- - [**Github**](https://github.com/NovaSky-AI/SkyThought): Code for data generation, response rewriting, RL training, and evaluations.
+We are excited to introduce **Sky-T1-32B-Flash**, our updated reasoning language model that significantly reduces overthinking, **slashing inference costs on challenging questions by up to 57%**. This enhancement decreases generation length while preserving accuracy across domains such as mathematics, coding, science, and general knowledge, and **requires only $275 for the complete training recipe** using 8xH100s according to Lambda Cloud pricing. To foster transparency and collaboration, we have open-sourced the full pipeline—from data generation and pre-processing to preference optimization and evaluation scripts—and openly provide the model weights and data.
+ - [**Github**](https://github.com/NovaSky-AI/SkyThought): Code for data generation, response rewriting, preference optimization, and evaluations.
  - [**Dataset**](https://huggingface.co/datasets/NovaSky-AI/Sky-T1_preference_data_10k): 10K preference pairs 
  - [**HuggingFace**](https://huggingface.co/NovaSky-AI/Sky-T1-32B-Flash): Sky-T1-32B-Flash model weights
 
@@ -29,7 +29,7 @@ Reducing overthinking improves efficiency and scalability by reducing redundant 
 ## How to reduce overthinking?
 Our approach to reduce overthinking builds on the self-training recipe proposed in [recent work](https://arxiv.org/abs/2412.21187) with important enhancements to improve accuracy in challenging benchmarks across multiple domains. A challenge of reducing overthinking is to prevent the model from *underthinking*, where the model proposes a final solution without sufficiently validating it. This challenge is especially highlighted in the most challenging benchmarks where extensive double-checking and backtracking are required. Ideally, the model learns to adjust the depth of its reasoning based on the complexity of the question.
 
-Our training process involves three primary stages: data generation, response rewriting, and RL. 
+Our training process involves three primary stages: data generation, response rewriting, and preference optimization. 
 
 ### Stage 1) Data Generation
 We used Sky-T1-32B-Preview to generate responses to the 12K questions in the [PRM800K](https://huggingface.co/datasets/tasksource/PRM800K) dataset. For each question, we used a temperature of 1.0 and generated 8 responses to create a diversity of response lengths. We then formed preference pairs to contrast “verbose” vs. “concise” solutions. Specifically, from the generated responses, we picked the shortest correct response as the positive example and the longest correct response as the negative example. We discarded the rest of the generated responses, and discard any questions that did not produce at least two correct responses. We hypothesize that preference optimization over such pairs can encourage the model to reduce overthinking. 
@@ -53,7 +53,7 @@ Following [prior work](https://arxiv.org/abs/2412.21187), we also explored rewri
 
 Stage 2 required ~1 hour on 8xH100-80GB for a total of ~$25 according to Lambda Cloud pricing.
 
-### Stage 3) RL - Preference Optimization
+### Stage 3) Preference Optimization
 We employed [SimPO](https://arxiv.org/abs/2405.14734) for preference optimization. SimPO is closely related to [DPO](https://arxiv.org/abs/2305.18290), but incorporates a length-normalized implicit reward into the optimization approach, which leads to shorter sequence lengths relative to DPO. Further, SimPO eliminates the need for the reference model required by DPO, making preference optimization less compute-intensive and therefore cheaper. As an alternative to preference optimization, we also explored using only SFT with the shortest responses, but found sequence lengths were only marginally reduced (<5%). In the [ablation results](#ablations), we include ablations for DPO using the same preference pairs as described in Stage (2) and for SFT using the shortest responses.
 
 We start with Sky-T1-32B-Preview as our base model and train with SimPO for 1 epoch and a batch size of 96. We found SimPO results to be sensitive to hyperparameter settings and performed limited exploration within the following space: learning rate = {1e-7, 5e-7, 1e-6}, gamma = {0.3, 0.5, 1.0}, beta = {2.0, 2.5}. We achieved the best performance with a learning rate of 5e-7, gamma of 0.3, and beta of 2.0.  We use [Llama-Factory](https://github.com/hiyouga/LLaMA-Factory) to perform training.
