@@ -15,13 +15,23 @@ author: NovaSky Team
 ---
 **By: [Tyler Griggs](https://tyler-griggs.github.io/), [Shiyi Cao](https://shiyicao.com/), [Dacheng Li](https://dachengli1.github.io/), [Shu Liu](https://www.linkedin.com/in/slynl/), [Shishir Patil](https://shishirpatil.github.io/), [Matei Zaharia](https://people.eecs.berkeley.edu/~matei/), [Joey Gonzalez](https://people.eecs.berkeley.edu/~jegonzal/), [Ion Stoica](https://people.eecs.berkeley.edu/~istoica/) -- Jan 23, 2025**
 
-We are excited to introduce **Sky-T1-32B-Flash**, our updated reasoning language model that significantly reduces overthinking, **slashing inference costs on challenging questions by up to 57%**. This enhancement decreases generation length while preserving accuracy across domains such as mathematics, coding, science, and general knowledge, and **requires only $275 for the complete training recipe** using 8xH100s according to Lambda Cloud pricing. To foster transparency and collaboration, we have open-sourced the full pipeline—from data generation and pre-processing to preference optimization and evaluation scripts—and openly provide the model weights and data.
+We are excited to introduce **Sky-T1-32B-Flash**, our updated reasoning language model that significantly reduces overthinking, **slashing inference costs on challenging questions by up to 57%**. 
+
+This enhancement decreases generation length while preserving accuracy across domains such as mathematics, coding, science, and general knowledge, and **requires only $275 for the complete training recipe** using 8xH100s according to Lambda Cloud pricing. 
+
+To foster transparency and collaboration, we have open-sourced the full pipeline—from data generation and pre-processing to preference optimization and evaluation scripts—and openly provide the model weights and data.
  - [**Github**](https://github.com/NovaSky-AI/SkyThought): Code for data generation, response rewriting, preference optimization, and evaluations.
  - [**Dataset**](https://huggingface.co/datasets/NovaSky-AI/Sky-T1_preference_data_10k): 10K preference pairs 
  - [**HuggingFace**](https://huggingface.co/NovaSky-AI/Sky-T1-32B-Flash): Sky-T1-32B-Flash model weights
 
 ![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/reduce-overthinking/headline-plot.png)
 **Figure 1:** Our new model significantly reduces generated token lengths while maintaining strong performance on challenging benchmarks.
+
+## What is "overthinking"?
+
+Overthinking is a phenomenon in reasoning models where the model may produce extra or redundant reasoning steps or tokens which do not affect the correct answer but can lead to ballooning inference costs. Some examples of this include:
+
+...
 
 ## Benefits of reducing overthinking
 Reducing overthinking improves efficiency and scalability by reducing redundant or unnecessary token generation. This improvement not only greatly reduces inference costs for reasoning models, but also offers multiple downstream benefits. First, the accelerated response delivery provides a much higher-quality user experience. Further, with more efficient reasoning, test-time generation methods such as Best-of-N, Majority Vote, or Monte Carlo Tree Search can yield higher accuracy within fixed computational budgets. It also streamlines data generation in self-training pipelines, which are often bottlenecked by large-scale data generation runs.
