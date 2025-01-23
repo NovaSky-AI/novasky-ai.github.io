@@ -54,7 +54,7 @@ Stage 3 required ~2.5 hours on 8xH100-80GB for a total of ~$60 according to Lamb
 ![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/reduce-overthinking/results-table.png)
 
 ### Ablations
-We report ablation results for alternative methods and recipes we explored. **SL** refers to using {**S**hortest correct example, **L**ongest correct example} preference pairs. **SILC** refers to using {**S**hort **I**ncorrect example, **L**ong **C**orrect example}.
+We report ablation results for alternative methods and recipes we explored. **LS** refers to using {Negative: **L**ongest correct example, Positive: **S**hortest correct example} preference pairs. **SILC** refers to using {Negative: **S**hort **I**ncorrect example, Positive: **L**ong **C**orrect example}.
 
 ![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/reduce-overthinking/ablations-table.png)
 
