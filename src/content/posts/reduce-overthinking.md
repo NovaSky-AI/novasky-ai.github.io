@@ -18,7 +18,7 @@ author: NovaSky Team
 We are excited to introduce **Sky-T1-32B-Flash**, our updated reasoning language model that significantly reduces overthinking, **slashing inference costs on challenging questions by up to 57%**. This enhancement decreases generation length while preserving accuracy across domains such as mathematics, coding, science, and general knowledge, and **requires only $275 for the complete training recipe** using 8xH100s according to Lambda Cloud pricing. To foster transparency and collaboration, we have open-sourced the full pipeline—from data generation and pre-processing to reinforcement learning (RL) training and evaluation scripts—and openly provide the model weights and data.
  - [**Github**](https://github.com/NovaSky-AI/SkyThought): Code for data generation, response rewriting, RL training, and evaluations.
  - [**Dataset**](https://huggingface.co/datasets/NovaSky-AI/Sky-T1_preference_data_10k): 10K preference pairs 
- - [**Hugging Face**](https://huggingface.co/NovaSky-AI/Sky-T1-32B-Flash): Sky-T1-32B-Flash model weights
+ - [**HuggingFace**](https://huggingface.co/NovaSky-AI/Sky-T1-32B-Flash): Sky-T1-32B-Flash model weights
 
 ![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/reduce-overthinking/headline-plot.png)
 **Figure 1:** Our new model significantly reduces generated token lengths while maintaining strong performance on challenging benchmarks.
