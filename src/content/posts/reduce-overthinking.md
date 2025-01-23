@@ -64,7 +64,7 @@ Stage 3 required ~2.5 hours on 8xH100-80GB for a total of ~$60 according to Lamb
 
 
 ## Results
-**Sky-T1-32B-Flash** maintains **Sky-T1-32B-Preview**’s accuracy across the suite of challenging benchmarks, and consistently reduces generation lengths by over 30%. Most notably, coding sequence lengths are reduced by 47% and 57% for LiveCodeBench Medium and Hard, respectively. 
+**Sky-T1-32B-Flash** maintains **Sky-T1-32B-Preview**’s accuracy across the suite of challenging benchmarks, and consistently reduces generation lengths by over 30%. Even on the most challengine problems, from AIME24 and LCB-Hard, Sky-T1-32B reduces sequence lengths by 37% and 57%, respectively. 
 
 ![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/reduce-overthinking/results-table.png)
 
