@@ -31,6 +31,8 @@ Our approach to reduce overthinking builds on the self-training recipe proposed 
 
 Our training process involves three primary stages: data generation, response rewriting, and preference optimization. 
 
+![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/reduce-overthinking/recipe.png)
+
 ### Stage 1) Data Generation
 We used Sky-T1-32B-Preview to generate responses to the 12K questions in the [PRM800K](https://huggingface.co/datasets/tasksource/PRM800K) dataset. For each question, we used a temperature of 1.0 and generated 8 responses to create a diversity of response lengths. We then formed preference pairs to contrast “verbose” vs. “concise” solutions. Specifically, from the generated responses, we picked the shortest correct response as the positive example and the longest correct response as the negative example. We discarded the rest of the generated responses, and discard any questions that did not produce at least two correct responses. We hypothesize that preference optimization over such pairs can encourage the model to reduce overthinking. 
 
