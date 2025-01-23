@@ -21,7 +21,6 @@ We are excited to introduce **Sky-T1-32B-Flash**, our updated reasoning language
  - [**Data**](https://github.com/NovaSky-AI/SkyThought): TODO
  - [**Model weights**](https://huggingface.co/NovaSky-AI): TODO
 
-
 ![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/reduce-overthinking/headline-plot.png)
 **Figure 1:** Our new model significantly reduces generated token lengths while maintaining strong performance on challenging benchmarks.
 
