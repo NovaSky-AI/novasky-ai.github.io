@@ -9,7 +9,7 @@ tags:
   - Preference-Optimization
   - Reinforcement-Learning
 pubDate: 2025-01-23
-cover: https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/reduce-overthinking/blue-bird-flash.jpeg
+cover: https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/reduce-overthinking/blue-bird-flash.jpg
 coverAlt: Blue Bird Flash
 author: NovaSky Team
 ---
