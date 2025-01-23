@@ -27,7 +27,6 @@ To foster transparency and collaboration, we have open-sourced the full pipeline
 ![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/reduce-overthinking/headline-plot.png)
 **Figure 1:** Our new model significantly reduces generated token lengths while maintaining strong performance on challenging benchmarks.
 
-
 ## What is overthinking?
 Overthinking refers to reasoning models’ tendency to produce unnecessarily long responses, often with redundant or excessive reasoning steps. In line with the findings of [recent work](https://arxiv.org/abs/2412.21187), we observe that reasoning models, including NovaSky’s recently released [Sky-T1-32B-Preview](https://novasky-ai.github.io/posts/sky-t1/), [QwQ](https://huggingface.co/Qwen/QwQ-32B-Preview), and [R1](https://huggingface.co/deepseek-ai/DeepSeek-R1), often produce reasoning sequences with multiple proposed solutions each followed by double-checking transitions such as “Alternatively,” “But wait,” or “Let me reconsider”. While double-checking can detect errors and refine solutions, it often results in repetitive validations of simple or already-validated steps, creating inefficiency. For example, in response to the question “What is 1+1,?” Sky-T1-32B-Preview produces over 1000 tokens and more than 10 of these double-checking transitions.
 
