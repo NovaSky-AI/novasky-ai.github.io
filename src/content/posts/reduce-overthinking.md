@@ -205,14 +205,19 @@ Stage 3 required ~2.5 hours on 8xH100-80GB for a total of ~$60 according to Lamb
 
 **Table 1** 
 
-### Ablations
+## Acknowledgement
+This work is done at [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/) with generous compute support from [Anyscale](https://www.anyscale.com/) and [Lambda Labs](https://lambdalabs.com/service/gpu-cloud?srsltid=AfmBOop5FnmEFTkavVtdZDsLWvHWNg6peXtat-OXJ9MW5GMNsk756PE5).
+
+## Appendix: Ablations
+We report ablation results for alternative methods and recipes we explored. `SL` refers to using {`S`hortest correct example, `L`ongest correct example} preference pairs. `SILC` refers to using {`S`hort `I`ncorrect example, `L`ong `C`orrect example}.
+
 <table>
   <thead>
     <tr>
       <th></th>
       <th></th>
       <th>Sky-T1-32B-Preview</th>
-      <th>Sky-T1-32B-Preview + SimPO</th>
+      <th>Sky-T1-32B-Flash</th>
       <th>SFT Shortest Response</th>
       <th>SimPO, math-only, SL</th>
       <th>SimPO, math-only, SL+SILC</th>
@@ -363,10 +368,6 @@ Stage 3 required ~2.5 hours on 8xH100-80GB for a total of ~$60 according to Lamb
   </tbody>
 </table>
 
-**Table 2**
-
-## Acknowledgement
-This work is done at [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/) with generous compute support from [Anyscale](https://www.anyscale.com/) and [Lambda Labs](https://lambdalabs.com/service/gpu-cloud?srsltid=AfmBOop5FnmEFTkavVtdZDsLWvHWNg6peXtat-OXJ9MW5GMNsk756PE5).
 
 ## Citation
 ```bibtex
