@@ -15,7 +15,11 @@ author: NovaSky Team
 ---
 **By: [Tyler Griggs](https://tyler-griggs.github.io/), [Shiyi Cao](https://shiyicao.com/), [Dacheng Li](https://dachengli1.github.io/), [Shu Liu](https://www.linkedin.com/in/slynl/), [Shishir G. Patil](https://shishirpatil.github.io/), [Matei Zaharia](https://people.eecs.berkeley.edu/~matei/), [Joey Gonzalez](https://people.eecs.berkeley.edu/~jegonzal/), [Ion Stoica](https://people.eecs.berkeley.edu/~istoica/) -- Jan 23, 2025**
 
-We are excited to introduce **Sky-T1-32B-Flash**, our updated reasoning language model that significantly reduces overthinking, **slashing inference costs on challenging questions by up to 57%**. This enhancement decreases generation length while preserving accuracy across domains such as mathematics, coding, science, and general knowledge, and **requires only $275 for the complete training recipe** using 8xH100s according to Lambda Cloud pricing. To foster transparency and collaboration, we have open-sourced the full pipeline—from data generation and pre-processing to preference optimization and evaluation scripts—and openly provide the model weights and data.
+We are excited to introduce **Sky-T1-32B-Flash**, our updated reasoning language model that significantly reduces overthinking, **slashing inference costs on challenging questions by up to 57%**. 
+
+This enhancement decreases generation length while preserving accuracy across domains such as mathematics, coding, science, and general knowledge, and **requires only $275 for the complete training recipe** using 8xH100s according to Lambda Cloud pricing. 
+
+To foster transparency and collaboration, we have open-sourced the full pipeline—from data generation and pre-processing to preference optimization and evaluation scripts—and openly provide the model weights and data.
  - [**Github**](https://github.com/NovaSky-AI/SkyThought): Code for data generation, response rewriting, preference optimization, and evaluations.
  - [**Dataset**](https://huggingface.co/datasets/NovaSky-AI/Sky-T1_preference_data_10k): 10K preference pairs 
  - [**HuggingFace**](https://huggingface.co/NovaSky-AI/Sky-T1-32B-Flash): Sky-T1-32B-Flash model weights
