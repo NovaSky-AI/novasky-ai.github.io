@@ -14,7 +14,7 @@ cover: https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/as
 coverAlt: performance bars
 author: NovaSky Team
 ---
-**Figure 1:** Performance of different models on the four popular math reasoning tasks. For rstar-math and Qwen2.5-7B-SimpleRL, since the model weights are not open source, we directly use their reported numbers. Sky-T1-7B demonstrates SOTA performance among 7B models (left 4 bars) trained with <10k distilled samples from strong teacher models and Sky-T1-mini reaches SOTA performance among all open-source 7B models, including those (5th-7th bars) trained with >100k distilled samples from strong teacher models.
+**Figure 1:** Performance of different models on the four popular math reasoning tasks. Sky-T1-7B demonstrates SOTA performance among 7B models (left 4 bars) trained with <10k distilled samples from strong teacher models and Sky-T1-mini reaches SOTA performance among all open-source 7B models, including those (5th-7th bars) trained with >100k distilled samples from strong teacher models. *For rstar-math and Qwen2.5-7B-SimpleRL, since the model weights are not open source, we directly use their reported numbers. 
 
 **By: [Shiyi Cao](https://shiyicao.com/), [Shu Liu](https://www.linkedin.com/in/slynl/), [Dacheng Li](https://dachengli1.github.io/), [Tyler Griggs](https://tyler-griggs.github.io/), [Kourosh Hakhamaneshi](https://www.linkedin.com/in/kourosh-hakhamaneshi-4816a58a), [Sumanth Hegde](https://sumanthrh.com/about/), [Shishir G. Patil](https://shishirpatil.github.io/), [Matei Zaharia](https://people.eecs.berkeley.edu/~matei/), [Joey Gonzalez](https://people.eecs.berkeley.edu/~jegonzal/), [Ion Stoica](https://people.eecs.berkeley.edu/~istoica/) -- Feb 11, 2025**
 
