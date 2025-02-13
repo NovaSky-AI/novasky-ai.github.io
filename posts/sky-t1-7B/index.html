@@ -28,7 +28,7 @@ const t={preserveBehavior:!1},e=e=>{if("string"==typeof e)return[e,t];const[n,r=
 </ul>
 <h2 id="sky-t1-7b--trained-with-4-step-sft-and-rl">Sky-T1-7B – Trained with 4-step SFT and RL</h2>
 <p><img src="https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/sky-t1-7b/7b.jpg" alt="img">
-<strong>Table 1:</strong> Benchmark performance of the intermediate models trained in the 4-step pipeline.</p>
+<strong>Table 1:</strong> Benchmark performance of the intermediate models trained in the 4-step pipeline. The final model achieves accuracy improvement of +10.4% on AIME24, +33.2% on MATH500, +36.8% on AMC23, +32.1% on OlympiadBench, and +21.1% on average, compared to the base model.</p>
 <h3 id="step-1-sft">Step 1: SFT</h3>
 <p>We use the QwQ model to generate the distillation data since the model was trained before the release of DeepSeek R1 and QwQ was the only open-weights long reasoning model at the time when we trained the model. For the data mixture, we use GPT-4o-mini to classify the difficulty of the prompts according to the AoPS standard and selected math problems of difficulty higher than Level 3, Olympiads higher than Level 8, and all AIME/AMC problems in the <a href="https://huggingface.co/datasets/AI-MO/NuminaMath-CoT">NUMINA dataset</a>. We then perform rejection sampling by only accepting the solutions that match the ground truth. In total, we curated 5K responses from QwQ.
 Finally, we use the 5K responses to perform SFT on the Qwen2.5-Math-7B using the <a href="https://github.com/NovaSky-AI/SkyThought/blob/main/skythought/skythought_evals/models/model_configs.yaml">Sky-T1 system prompt</a>. We trained the model for 3 epochs, using a learning rate of 1e-5, and a batch size of 96.</p>
