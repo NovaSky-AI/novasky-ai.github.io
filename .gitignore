@@ -1,3 +1,7 @@
 .astro
 node_modules
 dist
+
+# MacOS system files
+.DS_Store
+._.DS_Store
