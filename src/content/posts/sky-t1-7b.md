@@ -100,7 +100,7 @@ This work is done at [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/) 
 @misc{sky-t1-7b,
   author       = {NovaSky Team},
   title        = {Unlocking the Potential of Reinforcement Learning in Improving Reasoning Models},
-  howpublished = {https://novasky-ai.github.io/posts/sky-t1-mini},
+  howpublished = {https://novasky-ai.github.io/posts/sky-t1-7b},
   note         = {Accessed: 2025-02-13},
   year         = {2025}
 }
