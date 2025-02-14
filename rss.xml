@@ -84,7 +84,7 @@ This work is done at [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/) 
 @misc{sky-t1-7b,
   author       = {NovaSky Team},
   title        = {Unlocking the Potential of Reinforcement Learning in Improving Reasoning Models},
-  howpublished = {https://novasky-ai.github.io/posts/sky-t1-mini},
+  howpublished = {https://novasky-ai.github.io/posts/sky-t1-7b},
   note         = {Accessed: 2025-02-13},
   year         = {2025}
 }</content:encoded></item><item><title>Think Less, Achieve More: Cut Reasoning Costs by 50% Without Sacrificing Accuracy</title><link>https://novasky-ai.github.io/posts/reduce-overthinking/</link><guid isPermaLink="true">https://novasky-ai.github.io/posts/reduce-overthinking/</guid><description>We introduce Sky-T1-32B-Flash, our reasoning model that cuts generation length by up to 50% while maintaining accuracy.</description><pubDate>Thu, 23 Jan 2025 00:00:00 GMT</pubDate><content:encoded>**By: [Tyler Griggs](https://tyler-griggs.github.io/), [Shiyi Cao](https://shiyicao.com/), [Dacheng Li](https://dachengli1.github.io/), [Shu Liu](https://www.linkedin.com/in/slynl/), [Shishir G. Patil](https://shishirpatil.github.io/), [Matei Zaharia](https://people.eecs.berkeley.edu/~matei/), [Joey Gonzalez](https://people.eecs.berkeley.edu/~jegonzal/), [Ion Stoica](https://people.eecs.berkeley.edu/~istoica/) -- Jan 23, 2025**
