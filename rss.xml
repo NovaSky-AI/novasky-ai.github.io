@@ -1,4 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>NovaSky</title><description>Next-generation Open Vision and AI @ Berkeley Sky Computing Lab</description><link>https://novasky-ai.github.io/</link><language>en-US</language><item><title>Unlocking the Potential of Reinforcement Learning in Improving Reasoning Models</title><link>https://novasky-ai.github.io/posts/sky-t1-7B/</link><guid isPermaLink="true">https://novasky-ai.github.io/posts/sky-t1-7B/</guid><description>We are excited to release Sky-T1-7B, a SOTA open-recipe 7B model on math reasoning tasks, trained with 4-step SFT-&gt;RL-&gt;SFT-&gt;RL from the Qwen2.5-Math-7B base model. We also release Sky-T1-mini, trained with simple Reinforcement Learning (RL) applied on top of the DeepSeek-R1-Distill-Qwen-7B model, achieving close to OpenAI o1-mini performance on popular math benchmarks. We conduct a series of ablation studies on SFT data scaling, RL scaling and model’s pass@k performance after SFT and RL. We observe that the Long CoT SFT in general enhances the model’s pass@k performance while RL lifts the model’s performance at lower generation budgets (i.e., pass@1), which sometimes come at a cost of the entropy of solutions.</description><pubDate>Thu, 13 Feb 2025 00:00:00 GMT</pubDate><content:encoded>**Figure 1:** Average accuracy of different models on four popular math reasoning tasks (i.e., AIME24, AMC23, MATH500, and OlympiadBench). Sky-T1-7B demonstrates SOTA performance among 7B models (left 4 bars) trained with &lt;10k distilled samples from strong teacher reasoning models and Sky-T1-mini reaches SOTA performance among all open-source 7B models, including those (5th-7th bars) trained with &gt;100k distilled samples from strong teacher reasoning models. *For [rstar-math](https://arxiv.org/abs/2501.04519) and [Qwen2.5-7B-SimpleRL](https://hkust-nlp.notion.site/simplerl-reason), since the model weights are not open source, we directly use their reported numbers. 
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>NovaSky</title><description>Next-generation Open Vision and AI @ Berkeley Sky Computing Lab</description><link>https://novasky-ai.github.io/</link><language>en-US</language><item><title>S*: Test-Time Scaling for Code Generation</title><link>https://novasky-ai.github.io/posts/S*/</link><guid isPermaLink="true">https://novasky-ai.github.io/posts/S*/</guid><description>Introducing S*: Test-Time Scaling for Code Generation, start of our releases in the coding domain. S* enables (1) non-reasoning models surpass reasoning models: GPT-4o-mini + S* &gt; o1-preview. (2) open models compete SOTA: R1-Distilled-32B +S* ~= o1 (high).</description><pubDate>Fri, 21 Feb 2025 00:00:00 GMT</pubDate><content:encoded>![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/sstar/overall_performance.png)
+**Figure 1:** Performance improvement with S* in LiveCodeBench (v2) [1]. &quot;Qwen-Coder&quot; denotes &quot;Qwen2.5-Coder-Instruct [2],&quot; and &quot;R1-Distill&quot; denotes &quot;DeepSeek-R1-Distill-Qwen [3]&quot;. S* consistently improves models across different sizes, allowing non-reasoning models to surpass reasoning models and open models to be competitive with o1 (high reasoning effort) [4].
+
+**By: [Dacheng Li*](https://dachengli1.github.io/), [Shiyi Cao*](https://shiyicao.com/), Chengkun Cao, [Xiuyu Li](https://xiuyuli.com/), [Shangyin Tan](https://shangyit.me/), [kurt keutzer](https://people.eecs.berkeley.edu/~keutzer/), [Jiarong Xing](https://jxing.me/), [Joey Gonzalez](https://people.eecs.berkeley.edu/~jegonzal/), [Ion Stoica](https://people.eecs.berkeley.edu/~istoica/) -- Feb 21, 2025**
+
+Increasing test-time compute for Large Language Models (LLMs) has demonstrated promising gains across various domains. While this approach has been extensively studied in the math domain, its potential in code generation remains underexplored. In this paper, we propose S*, the first hybrid test-time scaling framework that substantially improves the coverage and selection accuracy of generated code. S* extends the existing parallel scaling paradigm with sequential scaling to push performance boundaries. It further leverages a novel selection mechanism that adaptively generates distinguishing inputs for pairwise comparison, combined with execution-grounded information to robustly identify correct solutions. Evaluation across 12 Large Language Models and Large Reasoning Models of varying sizes demonstrates the generality and superior performance of S*: 
+(1) it consistently improves performance across model families and sizes, enabling a 3B model to outperform GPT-4o-mini; 
+(2) it enables non-reasoning models to surpass reasoning models—GPT-4o-mini with S* outperforms o1-preview by 3.7% on LiveCodeBench; 
+(3) it further boosts state-of-the-art reasoning models—DeepSeek-R1-Distill-Qwen-32B with S* achieves 85.7% on LiveCodeBench, approaching o1 (high) at 88.5%. 
+
+To foster transparency and collaboration, we have open-sourced the full pipeline [here](https://github.com/NovaSky-AI/SkyThought/tree/main/skythought/test-time-scaling)
+
+## How S* Works
+![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/sstar/method.png)
+**Figure 2:** Overview of S*. Stage 1: Generation—S* enhances parallel samples through iterative debugging. Each sample is tested using public test cases executed via an interpreter, with outputs and/or error messages used to guide the next round of sample generation. Stage 2: Selection—S*selects the best sample by prompting an LLM to generate inputs that differentiate between paired samples, then leveraging actual execution results to inform the LLM to determine the optimal choice.
+
+
+S* operates in two key stages:
+
+Stage1: Generation
+We begin by generating multiple candidate solutions through parallel sampling. But instead of simply picking one at random or relying on static evaluation, S∗ improves coverage by extending parallel scaling with sequential scaling through iterative debugging grounded with execution feedback. Specifically, S∗ first generates $\mathbf{N}$ initial samples independently, leveraging parallel sampling techniques. Each sample is then refined through up to $\mathbf{R}$ rounds of sequential revision, informed by execution results on public test cases. The revision process halts once a sample passes all public tests or reaches the maximum number of revision attempts. This iterative debugging allows us to learn from mistakes in real-time, ensuring that the generated code is not only syntactically correct but also functionally robust.
+
+Stage 2: Selection
+After generating a set of candidate solutions, the next step is to identify the best one. Since public tests are already used during the generation stage, an additional evaluation is necessary for a reliable selection. Traditional approaches like LLM-as-a-judge that solely relies on pre-trained knowledge or generating static test cases often fall short of producing optimal results.
+
+To overcome the limitations of these methods, we introduced adaptive input synthesis, a hybrid selection approach that combines LLM evaluation with execution-grounded verification. First, we prompt the model to synthesize a set of test inputs. We execute these inputs and cluster the $\mathbf{N}$ samples based on their execution outputs. Next, we perform pairwise comparisons across clusters: for each comparison, we prompt the LLM to generate distinguishing inputs, execute both samples using these inputs, and select the superior one based on the execution results. This adaptive selection process, grounded in concrete execution feedback, leads to a more reliable and accurate selection of the best candidate solution.
+
+![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/sstar/breakdown.png)
+**Figure 3:** Ablation of S* performance benefits with our two-stage pipeline: Qwen2.5-Coder-14B-Instruct (denoted as Qwen-Coder14B) with S* can surpass o1-preview without S*. DeepSeek-R1-Distill-Qwen-14B (denoted as R1-Distill-14B) with S* outperforms o1-mini without S*.
+
+## Evaluation
+We evaluated S* across a diverse set of instruction-based and reasoning models, spanning various model families, sizes, and access types (open and closed), as well as multiple benchmarks such as LiveCodeBench and CodeContests.
+
+![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/sstar/evaluation.png)
+**Figure 4:** Performance comparison on LiveCodeBench with and without our framework, alongside state-of-the-art reasoning models for reference. Our results clearly demonstrate that our approach consistently enhances model performance across the board. When applied to models within the same family, our method enables smaller models to outperform larger ones—for instance, a Qwen2.5-7B-Coder-Instruct model integrated with S* outperforms its 32B counterpart without S* by 7%. It also empowers instruction-based models to surpass traditional reasoning models, as shown by one of our smaller models outperforming a leading reasoning model. Furthermore, even the most capable open-source reasoning model, DeepSeek-R1-Distill-Qwen-32B, surpasses o1-mini and achieves near state-of-the-art performance when enhanced with our approach.
+In addition, we compared our framework against two popular test-time scaling methods—one based on majority voting, where the model generates multiple samples, clusters them by execution results, and selects a final candidate, and another based on self-debugging, where the model iteratively refines a single sample using public tests. Using consistent hyperparameters for a fair comparison, our framework consistently outperformed both techniques, as shown in Table 1. For the Qwen2.5-Coder series, our method improved performance by 8.4% to 18.2% over the baselines, and for the best performing model, it beat the majority voting baseline by 9.9% and the self-debugging baseline by 15.6%. These results underscore the effectiveness of our hybrid approach in improving model performance across different scales, architectures, and reasoning capabilities.
+
+## Citation
+```bibtex
+@article{li2025sstar,
+  title={S*: Test Time Scaling for Code Generation},
+  author={Li, Dacheng and Cao, Shiyi and Cao, Chengkun and Li, Xiuyu and Tan, Shangyin and Keutzer, Kurt and Xing, Jiarong and Gonzalez, Joseph E. and Stoica, Ion},
+  year={2025}
+}</content:encoded></item><item><title>Unlocking the Potential of Reinforcement Learning in Improving Reasoning Models</title><link>https://novasky-ai.github.io/posts/sky-t1-7B/</link><guid isPermaLink="true">https://novasky-ai.github.io/posts/sky-t1-7B/</guid><description>We are excited to release Sky-T1-7B, a SOTA open-recipe 7B model on math reasoning tasks, trained with 4-step SFT-&gt;RL-&gt;SFT-&gt;RL from the Qwen2.5-Math-7B base model. We also release Sky-T1-mini, trained with simple Reinforcement Learning (RL) applied on top of the DeepSeek-R1-Distill-Qwen-7B model, achieving close to OpenAI o1-mini performance on popular math benchmarks. We conduct a series of ablation studies on SFT data scaling, RL scaling and model’s pass@k performance after SFT and RL. We observe that the Long CoT SFT in general enhances the model’s pass@k performance while RL lifts the model’s performance at lower generation budgets (i.e., pass@1), which sometimes come at a cost of the entropy of solutions.</description><pubDate>Thu, 13 Feb 2025 00:00:00 GMT</pubDate><content:encoded>**Figure 1:** Average accuracy of different models on four popular math reasoning tasks (i.e., AIME24, AMC23, MATH500, and OlympiadBench). Sky-T1-7B demonstrates SOTA performance among 7B models (left 4 bars) trained with &lt;10k distilled samples from strong teacher reasoning models and Sky-T1-mini reaches SOTA performance among all open-source 7B models, including those (5th-7th bars) trained with &gt;100k distilled samples from strong teacher reasoning models. *For [rstar-math](https://arxiv.org/abs/2501.04519) and [Qwen2.5-7B-SimpleRL](https://hkust-nlp.notion.site/simplerl-reason), since the model weights are not open source, we directly use their reported numbers. 
 
 **By: [Shiyi Cao](https://shiyicao.com/), [Shu Liu](https://www.linkedin.com/in/slynl/), [Dacheng Li](https://dachengli1.github.io/), [Tyler Griggs](https://tyler-griggs.github.io/), [Kourosh Hakhamaneshi](https://www.linkedin.com/in/kourosh-hakhamaneshi-4816a58a), [Sumanth Hegde](https://sumanthrh.com/about/), [Eric Tang](https://erictang000.github.io/), [Shishir G. Patil](https://shishirpatil.github.io/), [Matei Zaharia](https://people.eecs.berkeley.edu/~matei/), [Joey Gonzalez](https://people.eecs.berkeley.edu/~jegonzal/), [Ion Stoica](https://people.eecs.berkeley.edu/~istoica/) -- Feb 13, 2025**
 
@@ -165,176 +208,5 @@ This work is done at [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/) 
   title        = {Think Less, Achieve More: Cut Reasoning Costs by 50% Without Sacrificing Accuracy},
   howpublished = {https://novasky-ai.github.io/posts/reduce-overthinking},
   note         = {Accessed: 2025-01-23},
-  year         = {2025}
-}</content:encoded></item><item><title>Sky-T1: Train your own O1 preview model within $450</title><link>https://novasky-ai.github.io/posts/sky-t1/</link><guid isPermaLink="true">https://novasky-ai.github.io/posts/sky-t1/</guid><description>We introduce Sky-T1-32B-Preview, our reasoning model that performs on par with o1-preview on popular reasoning and coding benchmarks.</description><pubDate>Fri, 10 Jan 2025 00:00:00 GMT</pubDate><content:encoded>We introduce Sky-T1-32B-Preview, our reasoning model that performs on par with o1-preview on popular reasoning and coding benchmarks. **Remarkably, Sky-T1-32B-Preview was trained for less than $450, demonstrating that it is possible to replicate high-level reasoning capabilities affordably and efficiently.** All [code](https://github.com/NovaSky-AI/SkyThought) is open-source. 
-
-![img](https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/sky-t1/Sky-T1-pipeline.jpg)
-
-## Overview
-Models such as o1 and Gemini 2.0 flash thinking that excel in reasoning have shown to solve complex tasks by producing a long internal chain of thought, among other advancements. However, the technical details and model weights are un-accessible, presenting a barrier to the participation of the academic and open-source communities.
-
-In response, a few notable efforts have emerged to train open-weight reasoning models in the math domain, such as [Still-2](https://arxiv.org/abs/2412.09413) and [Journey](https://arxiv.org/abs/2411.16489). Concurrently, we, the NovaSky team at UC Berkeley, have been exploring various techniques to evolve the reasoning capabilities of base and instruct-tuned models. In this work, we achieve competitive reasoning performance not just in math, but also in coding in the same model.
-
-### Fully Open-source: Driving Progress Together
-To ensure our work benefits the broader community, we are fully committed to open-source collaboration. We open-source all details (i.e., data, codes, model weights) to enable the community to replicate and improve on our results *easily*:
- - [**Infrastructure**](https://github.com/NovaSky-AI/SkyThought): to build the data, train, and evaluate the model in a single repository.
- - [**Data**](https://github.com/NovaSky-AI/SkyThought): 17K data used to train Sky-T1-32B-Preview.
- - [**Technical details**](https://novasky-ai.github.io/posts/sky-t1): Our technical [report](https://novasky-ai.github.io/posts/sky-t1/) with a [wandb log](https://api.wandb.ai/links/sky-posttraining-uc-berkeley/wjg3sybl).
- - [**Model weights**](https://huggingface.co/NovaSky-AI): Our 32B model weight.
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Model&lt;/th&gt;
-      &lt;th style=&quot;background-color: #bfbfbf;&quot;&gt;&lt;div align=&quot;center&quot;&gt;Sky-T1-32B-Preview&lt;/div&gt;&lt;/th&gt;
-      &lt;th&gt;&lt;div align=&quot;center&quot;&gt;STILL-2&lt;/div&gt;&lt;/th&gt;
-      &lt;th&gt;&lt;div align=&quot;center&quot;&gt;Journey&lt;/div&gt;&lt;/th&gt;
-      &lt;th&gt;&lt;div align=&quot;center&quot;&gt;QwQ&lt;/div&gt;&lt;/th&gt;
-      &lt;th&gt;&lt;div align=&quot;center&quot;&gt;o1&lt;/div&gt;&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Data&lt;/td&gt;
-      &lt;td style=&quot;background-color: #f2f2f2;&quot;&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;❌&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;❌&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;❌&lt;/div&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Code&lt;/td&gt;
-      &lt;td style=&quot;background-color: #f2f2f2;&quot;&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;❌&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;❌&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;❌&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;❌&lt;/div&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Report&lt;/td&gt;
-      &lt;td style=&quot;background-color: #f2f2f2;&quot;&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;❌&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;❌&lt;/div&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Math Domain&lt;/td&gt;
-      &lt;td style=&quot;background-color: #f2f2f2;&quot;&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Coding Domain&lt;/td&gt;
-      &lt;td style=&quot;background-color: #f2f2f2;&quot;&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;❌&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;❌&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Model Weights&lt;/td&gt;
-      &lt;td style=&quot;background-color: #f2f2f2;&quot;&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;❌&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;✅&lt;/div&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;div align=&quot;center&quot;&gt;❌&lt;/div&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-By sharing all these resources, we aim to empower the academic and open-source communities to build on our work, explore new possibilities, and push the boundaries of reasoning model development.
-
-## Recipes
-### Data Curation Process
-To generate our training data we use QwQ-32B-Preview, an open-source model with reasoning capabilities comparable to o1-preview. We curate the data mixture  (see later section) to cover diverse domains that require reasoning, and a reject sampling procedure to improve the data quality. We then rewrite QwQ traces with GPT-4o-mini into a well-formatted version, inspired by [Still-2](https://arxiv.org/abs/2412.09413), to improve data quality and ease parsing. We particularly find the ease of parsing advantageous for reasoning models - they are trained to respond in a particular format, where results are often hard to parse. For instance, on the APPs dataset, without reformatting, we can only assume that the code is written in the last code block, where QwQ only achieves ~25% accuracy. However, sometimes code can be written in the middle, where after reformatting, the accuracy is boosted to higher than 90%.
-
-**Rejection Sampling:** We discard QwQ samples if they are incorrect according to the solutions provided in datasets. For Math problems, we do exact matching with the ground truth solutions. For coding problems, we execute the unit tests provided in datasets. Our final data contains 5k coding data from APPs and TACO, and 10k math data from AIME, MATH, and Olympiads subsets of the NuminaMATH dataset. In addition, we maintain 1k science and puzzle data from STILL-2.
-
-### Training
-We use our training data to fine tune Qwen2.5-32B-Instruct, an open source model without reasoning capabilities. The model is trained with 3 epochs, learning rate 1e-5 and batch size 96. The model training finishes in 19 hours on 8 H100 with DeepSpeed Zero-3 offload (~ $450 according to Lambda Cloud pricing). We use [Llama-Factory](https://github.com/hiyouga/LLaMA-Factory) to perform training.
-
-### Evaluation and Results
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;&lt;/th&gt;
-      &lt;th style=&quot;background-color: #bfbfbf;&quot;&gt;Sky-T1-32B-Preview&lt;/th&gt;
-      &lt;th&gt;Qwen-2.5-32B-Instruct&lt;/th&gt;
-      &lt;th&gt;QwQ&lt;/th&gt;
-      &lt;th&gt;o1-preview&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Math500&lt;/td&gt;
-      &lt;td style=&quot;background-color: #F2F2F2;&quot;&gt;82.4&lt;/td&gt;
-      &lt;td&gt;76.2&lt;/td&gt;
-      &lt;td&gt;85.4&lt;/td&gt;
-      &lt;td&gt;81.4&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;AIME2024&lt;/td&gt;
-      &lt;td style=&quot;background-color: #F2F2F2;&quot;&gt;43.3&lt;/td&gt;
-      &lt;td&gt;16.7&lt;/td&gt;
-      &lt;td&gt;50.0&lt;/td&gt;
-      &lt;td&gt;40.0&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;LiveCodeBench-Easy&lt;/td&gt;
-      &lt;td style=&quot;background-color: #F2F2F2;&quot;&gt;86.3&lt;/td&gt;
-      &lt;td&gt;84.6&lt;/td&gt;
-      &lt;td&gt;90.7&lt;/td&gt;
-      &lt;td&gt;92.9&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;LiveCodeBench-Medium&lt;/td&gt;
-      &lt;td style=&quot;background-color: #F2F2F2;&quot;&gt;56.8&lt;/td&gt;
-      &lt;td&gt;40.8&lt;/td&gt;
-      &lt;td&gt;56.3&lt;/td&gt;
-      &lt;td&gt;54.9&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;LiveCodeBench-Hard&lt;/td&gt;
-      &lt;td style=&quot;background-color: #F2F2F2;&quot;&gt;17.9&lt;/td&gt;
-      &lt;td&gt;9.8&lt;/td&gt;
-      &lt;td&gt;17.1&lt;/td&gt;
-      &lt;td&gt;16.3&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;GPQA-Diamond&lt;/td&gt;
-      &lt;td style=&quot;background-color: #F2F2F2;&quot;&gt;56.8&lt;/td&gt;
-      &lt;td&gt;45.5&lt;/td&gt;
-      &lt;td&gt;52.5&lt;/td&gt;
-      &lt;td&gt;75.2&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-
-## Other findings
-**Model size matters.** We initially experimented with training on smaller models (7B and 14B) but observed only modest improvements. For example, training Qwen2.5-14B-Coder-Instruct on the APPs dataset resulted in a slight performance increase on LiveCodeBench from 42.6% to 46.3%. However, upon manually inspecting outputs from smaller models (those smaller than 32B), we found that they frequently generated repetitive content, limiting their effectiveness.
-
-
-**Data mixture matters.** We initially trained a 32B model using 3–4K math problems from the Numina dataset (provided by STILL-2), achieving a significant improvement in AIME24 accuracy from 16.7% to 43.3%. However, when we incorporated coding data generated from the APPs dataset into the training process, AIME24 accuracy dropped to 36.7%. We hypothesize that this decline is due to the distinct reasoning approaches required for math and coding tasks.
-
-Reasoning in coding often involves additional logical steps, such as simulating test inputs or internally executing generated code, whereas reasoning for math problems tends to be more direct and structured. To address these differences, we enriched the training data with challenging math problems from the NuminaMath dataset and complex coding tasks from the TACO dataset. This balanced data mixture enabled the model to excel in both domains, restoring 43.3% accuracy on AIME24 while also improving its coding capabilities.
-
-## Future work
-Sky-T1-32B-Preview marks the start of our journey to develop open-sourced models with advanced reasoning capabilities. Moving forward, we will focus on developing more efficient models that maintain strong reasoning performance and exploring advanced techniques that further enhance the models’ efficiency and accuracy at test time. Stay tuned as we make progress on these exciting initiatives.
-
-
-## Acknowledgement
-This work is done at [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/), with the amazing compute support from [Lambda Labs](https://lambdalabs.com/service/gpu-cloud?srsltid=AfmBOop5FnmEFTkavVtdZDsLWvHWNg6peXtat-OXJ9MW5GMNsk756PE5) and [Anyscale](https://www.anyscale.com/). We would like to express our gratitude for the valuable academic feedback and support from the [Still-2 Team](https://arxiv.org/pdf/2412.09413), and Junyang Lin from the [Qwen Team](https://qwenlm.github.io/).
-
-## Citation
-```bibtex
-@misc{sky_t1_2025,
-  author       = {NovaSky Team},
-  title        = {Sky-T1: Train your own O1 preview model within $450},
-  howpublished = {https://novasky-ai.github.io/posts/sky-t1},
-  note         = {Accessed: 2025-01-09},
   year         = {2025}
 }</content:encoded></item></channel></rss>
