@@ -57,8 +57,10 @@ We also compare our framework against two popular test-time scaling methods—on
 
 ## Citation
 ```bibtex
-@article{li2025sstar,
+@article{li2025s,
   title={S*: Test Time Scaling for Code Generation},
-  author={Li, Dacheng and Cao, Shiyi and Cao, Chengkun and Li, Xiuyu and Tan, Shangyin and Keutzer, Kurt and Xing, Jiarong and Gonzalez, Joseph E. and Stoica, Ion},
+  author={Li, Dacheng and Cao, Shiyi and Cao, Chengkun and Li, Xiuyu and Tan, Shangyin and Keutzer, Kurt and Xing, Jiarong and Gonzalez, Joseph E and Stoica, Ion},
+  journal={arXiv preprint arXiv:2502.14382},
   year={2025}
 }
+```
