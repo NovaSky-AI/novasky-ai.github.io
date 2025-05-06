@@ -11,6 +11,7 @@ const posts = defineCollection({
     category: z.array(z.string()),
     tags: z.array(z.string()),
     author: z.string(),
+    notionUrl: z.string().optional(),
   }),
 });
 
