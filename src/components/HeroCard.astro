@@ -28,12 +28,13 @@ function truncateUTF8String(str: string, maxBytes: number) {
 }
 
 const truncatedDescription = truncateUTF8String(post.data.description, 150);
+const postUrl = post.data.notionUrl || `/posts/${post.slug}/`;
 ---
 
 <div
   class="relative overflow-hidden rounded-xl border bg-white transition-transform duration-500 hover:-translate-y-1 hover:scale-105 md:flex md:flex-row dark:border-neutral-600 dark:bg-neutral-900"
 >
-  <a href={`/posts/${post.slug}/`} class="block md:flex md:flex-1">
+  <a href={postUrl} class="block md:flex md:flex-1">
     <div class="md:w-2/3">
       <OptimizedCover src={post.data.cover} alt={post.data.coverAlt} />
     </div>
