@@ -33,7 +33,7 @@ const relatedPosts = await getRelatedArticlesByCategory();
 
       return (
         <div class="relative mb-4 overflow-hidden rounded-xl bg-white transition-transform duration-500 hover:-translate-y-1 hover:scale-105 dark:bg-neutral-900">
-          <a href={postUrl}>
+          <a href={postUrl} target={post.data.notionUrl ? "_blank" : undefined}>
             <OptimizedCover src={post.data.cover} alt={post.data.coverAlt} />
             <div class="absolute bottom-0 end-0 start-0 bg-gradient-to-t p-4 md:p-5">
               <div class="mt-16 flex items-center gap-4 text-xs text-white">
