@@ -13,5 +13,5 @@ pubDate: 2025-05-07
 cover: https://raw.githubusercontent.com/NovaSky-AI/novasky-ai.github.io/main/assets/images/skyrl-v0/workflow.png
 coverAlt: workflow
 author: NovaSky Team
-notionUrl: "https://tested-erica-a2b.notion.site/skyrl-v0"
+notionUrl: "https://novasky-ai.notion.site/skyrl-v0"
 ---
