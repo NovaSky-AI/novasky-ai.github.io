@@ -52,7 +52,7 @@ export const SocialLinks = [
     label: "GitHub",
   },
   {
-    href: "https://discord.gg/RBAjeWSA", // Replace with your actual Discord invite link
+    href: "https://discord.gg/kexQXy5yA3", 
     icon: "tabler:brand-discord",
     label: "Discord",
   },
