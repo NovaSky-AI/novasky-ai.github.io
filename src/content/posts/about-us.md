@@ -12,7 +12,7 @@ coverAlt: About
 author: NovaSky Team
 ---
 
-NovaSky (Next-generation Open Vision and AI) is a collaborative initiative led by students and advisors at UC Berkeley’s Sky Computing Lab. We aim to build the next-generation AI models that are SoTA, open-source and affordable for everyone. 
+NovaSky is a collaborative initiative led by students and advisors at UC Berkeley’s Sky Computing Lab. We aim to build the next-generation AI models that are SoTA, open-source and affordable for everyone. 
 
 ### Team
 
