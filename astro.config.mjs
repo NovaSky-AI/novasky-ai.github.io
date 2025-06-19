@@ -6,15 +6,18 @@ import partytown from "@astrojs/partytown";
 import pagefind from "astro-pagefind";
 import icon from "astro-icon";
 import tailwind from "@astrojs/tailwind";
+import node from "@astrojs/node"; // ✅ ADD THIS
 
-// https://astro.build/config
 export default defineConfig({
   site: "https://novasky-ai.github.io/",
-  // base: "",
+  output: "server", // ✅ ENABLE SSR
+
+  adapter: node({ mode: "standalone" }), // ✅ INSTALL ADAPTER
+
   trailingSlash: "always",
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: 'viewport',
+    defaultStrategy: "viewport",
   },
 
   image: {
@@ -35,19 +38,16 @@ export default defineConfig({
     sitemap(),
     pagefind(),
     tailwind(),
-
     partytown({
       config: {
         forward: ["dataLayer.push"],
         debug: false,
       },
     }),
-
     icon({
       include: {
         tabler: ["*"],
       },
     }),
-    
   ],
 });

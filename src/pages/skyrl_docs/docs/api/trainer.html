@@ -1,0 +1,325 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trainer API &mdash; SkyTrainer  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Generator API" href="generator.html" />
+    <link rel="prev" title="API Reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SkyTrainer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Trainer API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dispatch-apis">Dispatch APIs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#skyrl.distributed.dispatch.Dispatch"><code class="docutils literal notranslate"><span class="pre">Dispatch</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skyrl.distributed.dispatch.MeshDispatch"><code class="docutils literal notranslate"><span class="pre">MeshDispatch</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skyrl.distributed.dispatch.PassThroughDispatch"><code class="docutils literal notranslate"><span class="pre">PassThroughDispatch</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="generator.html">Generator API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="env.html">SkyGym API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html">Data Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/index.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration/index.html">Configurations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/index.html">Recipes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SkyTrainer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Trainer API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/trainer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="trainer-api">
+<h1>Trainer API<a class="headerlink" href="#trainer-api" title="Link to this heading"></a></h1>
+<p>The Trainer drives the training loop.</p>
+<section id="dispatch-apis">
+<h2>Dispatch APIs<a class="headerlink" href="#dispatch-apis" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.Dispatch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">skyrl.distributed.dispatch.</span></span><span class="sig-name descname"><span class="pre">Dispatch</span></span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#Dispatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.Dispatch" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<p>Base class for dispatch types</p>
+<p>Dispatch types are responsible for:
+- dispatching method calls to actors handling data sharding if necessary
+- collecting results from actors and concatenating results if necessary
+- validating arguments for dispatch</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.Dispatch.dispatch">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dispatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor_infos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#Dispatch.dispatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.Dispatch.dispatch" title="Link to this definition"></a></dt>
+<dd><p>Dispatches method calls to the actors with data sharing if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectRef</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.Dispatch.async_collect">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">async_collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor_infos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_refs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#Dispatch.async_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.Dispatch.async_collect" title="Link to this definition"></a></dt>
+<dd><p>Collects results from the actors asynchronously in an asyncio-compatible way.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="data.html#skyrl.training_batch.TrainingOutputBatch" title="skyrl.training_batch.TrainingOutputBatch"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrainingOutputBatch</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.Dispatch.sync_collect">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor_infos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_refs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#Dispatch.sync_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.Dispatch.sync_collect" title="Link to this definition"></a></dt>
+<dd><p>Collects results from the actors synchronously and returns a <cite>TrainingOutputBatch</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="data.html#skyrl.training_batch.TrainingOutputBatch" title="skyrl.training_batch.TrainingOutputBatch"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrainingOutputBatch</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.Dispatch.validate_dispatch_args">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_dispatch_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#Dispatch.validate_dispatch_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.Dispatch.validate_dispatch_args" title="Link to this definition"></a></dt>
+<dd><p>Validate and process arguments for dispatch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (args, kwargs) to be passed to dispatch</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.MeshDispatch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">skyrl.distributed.dispatch.</span></span><span class="sig-name descname"><span class="pre">MeshDispatch</span></span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#MeshDispatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.MeshDispatch" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#skyrl.distributed.dispatch.Dispatch" title="skyrl.distributed.dispatch.Dispatch"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dispatch</span></code></a></p>
+<p>Mesh dispatch type to dispatch data to a group of actors along the device mesh.</p>
+<p>Supports DP (Data Parallel), SP (Sequence Parallel), TP (Tensor Parallel) and PP (Pipeline Parallel) parallelism.
+The actor method should accept a single argument - the data batch.</p>
+<p>For data dispatch:</p>
+<ul class="simple">
+<li><p>The input data is chunked into <cite>dp_size</cite> equal chunks, where <cite>dp_size</cite> is the size of data parallelism.</p></li>
+<li><p>Each actor with the same DP rank processes the same data chunk in parallel.</p></li>
+</ul>
+<p>For data collection:</p>
+<ul class="simple">
+<li><p>Data is collected only from the primary rank of each model/sequence parallel group.</p></li>
+<li><p>The primary rank is defined as the rank with (SP=0, TP=0, PP=0).</p></li>
+<li><p>The collected chunks are concatenated in order of DP rank to reconstruct the full data.</p></li>
+</ul>
+<p>Example: For a world size of 8, with DP size=2, SP size=2, TP size=2, PP size=1:</p>
+<ul class="simple">
+<li><p>Data dispatch: The data is chunked into 2 chunks. All actors with DP rank 0 process the first chunk,
+and all actors with DP rank 1 process the second chunk.</p></li>
+<li><p>Data collection: Only two actors contribute to the final output - the primary rank from each DP group:
+(DP=0, SP=0, TP=0, PP=0) and (DP=1, SP=0, TP=0, PP=0). Their chunks are concatenated in order.</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.MeshDispatch.dispatch">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dispatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor_infos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#MeshDispatch.dispatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.MeshDispatch.dispatch" title="Link to this definition"></a></dt>
+<dd><p>Dispatches method calls to the actors with data sharing if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectRef</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.MeshDispatch.async_collect">
+<em class="property"><span class="pre">async</span><span class="w"> </span><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">async_collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor_infos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_refs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#MeshDispatch.async_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.MeshDispatch.async_collect" title="Link to this definition"></a></dt>
+<dd><p>Collects results from the actors asynchronously in an asyncio-compatible way.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="data.html#skyrl.training_batch.TrainingOutputBatch" title="skyrl.training_batch.TrainingOutputBatch"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrainingOutputBatch</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.MeshDispatch.sync_collect">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor_infos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_refs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#MeshDispatch.sync_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.MeshDispatch.sync_collect" title="Link to this definition"></a></dt>
+<dd><p>Collects results from the actors synchronously and returns a <cite>TrainingOutputBatch</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="data.html#skyrl.training_batch.TrainingOutputBatch" title="skyrl.training_batch.TrainingOutputBatch"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrainingOutputBatch</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.MeshDispatch.validate_dispatch_args">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_dispatch_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#MeshDispatch.validate_dispatch_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.MeshDispatch.validate_dispatch_args" title="Link to this definition"></a></dt>
+<dd><p>Validate and process arguments for dispatch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (args, kwargs) to be passed to dispatch</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.PassThroughDispatch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">skyrl.distributed.dispatch.</span></span><span class="sig-name descname"><span class="pre">PassThroughDispatch</span></span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#PassThroughDispatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.PassThroughDispatch" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#skyrl.distributed.dispatch.Dispatch" title="skyrl.distributed.dispatch.Dispatch"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dispatch</span></code></a></p>
+<p>PassThrough dispatch type to dispatch data to a group of actors without any sharding.</p>
+<p>This is useful for cases where we want to run the same method on all the actors.
+Supports methods with any number of arguments.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.PassThroughDispatch.dispatch">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dispatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor_infos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#PassThroughDispatch.dispatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.PassThroughDispatch.dispatch" title="Link to this definition"></a></dt>
+<dd><p>Dispatches method calls to the actors with data sharing if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectRef</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.PassThroughDispatch.async_collect">
+<em class="property"><span class="pre">async</span><span class="w"> </span><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">async_collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor_infos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_refs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#PassThroughDispatch.async_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.PassThroughDispatch.async_collect" title="Link to this definition"></a></dt>
+<dd><p>Collects results from the actors asynchronously in an asyncio-compatible way.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="data.html#skyrl.training_batch.TrainingOutputBatch" title="skyrl.training_batch.TrainingOutputBatch"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrainingOutputBatch</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.PassThroughDispatch.sync_collect">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor_infos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_refs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#PassThroughDispatch.sync_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.PassThroughDispatch.sync_collect" title="Link to this definition"></a></dt>
+<dd><p>Collects results from the actors synchronously and returns a <cite>TrainingOutputBatch</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="data.html#skyrl.training_batch.TrainingOutputBatch" title="skyrl.training_batch.TrainingOutputBatch"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrainingOutputBatch</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="skyrl.distributed.dispatch.PassThroughDispatch.validate_dispatch_args">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_dispatch_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skyrl/distributed/dispatch.html#PassThroughDispatch.validate_dispatch_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skyrl.distributed.dispatch.PassThroughDispatch.validate_dispatch_args" title="Link to this definition"></a></dt>
+<dd><p>Validate and process arguments for dispatch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (args, kwargs) to be passed to dispatch</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="generator.html" class="btn btn-neutral float-right" title="Generator API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, NovaSkyAI.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

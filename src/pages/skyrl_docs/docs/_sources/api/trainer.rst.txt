@@ -1,0 +1,25 @@
+Trainer API
+===========
+
+The Trainer drives the training loop. 
+
+Dispatch APIs
+-------------
+
+.. autoclass:: skyrl.distributed.dispatch.Dispatch
+   :members:
+   :member-order: bysource
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: skyrl.distributed.dispatch.MeshDispatch
+   :members:
+   :member-order: bysource
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: skyrl.distributed.dispatch.PassThroughDispatch
+   :members:
+   :member-order: bysource
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,12 @@
+Generator API
+=============
+
+The Generator is responsible for generating trajectories for training.
+
+Core APIs
+---------
+
+.. autoclass:: skyrl.generators.GeneratorInterface
+   :members:
+   :member-order: bysource
+   :undoc-members:

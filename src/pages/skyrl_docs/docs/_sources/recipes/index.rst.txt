@@ -1,0 +1,10 @@
+Recipes 
+=======
+
+We provide a few end-to-end training recipes for getting started.
+
+.. toctree::
+   :maxdepth: 1
+
+   skyrl-sql
+   skyrl-v0
