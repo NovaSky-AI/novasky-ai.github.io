@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>skyrl.distributed.dispatch &mdash; SkyTrainer  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SkyTrainer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../datasets/index.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration/index.html">Configurations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../recipes/index.html">Recipes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SkyTrainer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">skyrl.distributed.dispatch</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for skyrl.distributed.dispatch</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Defines dispatch and collect logic for distributed training&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ray.actor</span><span class="w"> </span><span class="kn">import</span> <span class="n">ActorHandle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ray</span><span class="w"> </span><span class="kn">import</span> <span class="n">ObjectRef</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skyrl.training_batch</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingInputBatch</span><span class="p">,</span> <span class="n">TrainingOutputBatch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MeshRank</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a rank in the device mesh.</span>
+
+<span class="sd">    This is a tuple of (DP, SP, TP, PP) ranks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dp</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">sp</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">tp</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">pp</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="n">world_size</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">dp_size</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_primary_dp_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if this rank is the primary DP rank.</span>
+
+<span class="sd">        This is the rank with (SP=0, TP=0, PP=0)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tp</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;MeshRank(dp=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dp</span><span class="si">}</span><span class="s2">, sp=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sp</span><span class="si">}</span><span class="s2">, tp=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tp</span><span class="si">}</span><span class="s2">, world_size=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">world_size</span><span class="si">}</span><span class="s2">, dp_size=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dp_size</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ActorInfo</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Actor information for distributed training.</span>
+
+<span class="sd">    This includes the actor handle and the rank in the device mesh.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">handle</span><span class="p">:</span> <span class="n">ActorHandle</span>
+    <span class="n">rank</span><span class="p">:</span> <span class="n">MeshRank</span>
+
+
+<div class="viewcode-block" id="Dispatch">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.Dispatch">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Dispatch</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for dispatch types</span>
+
+<span class="sd">    Dispatch types are responsible for:</span>
+<span class="sd">    - dispatching method calls to actors handling data sharding if necessary</span>
+<span class="sd">    - collecting results from actors and concatenating results if necessary</span>
+<span class="sd">    - validating arguments for dispatch</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Dispatch.dispatch">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.Dispatch.dispatch">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dispatch</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">actor_infos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ActorInfo</span><span class="p">],</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ObjectRef</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dispatches method calls to the actors with data sharing if necessary.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Dispatch.async_collect">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.Dispatch.async_collect">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_collect</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">actor_infos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ActorInfo</span><span class="p">],</span> <span class="n">object_refs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ObjectRef</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingOutputBatch</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Collects results from the actors asynchronously in an asyncio-compatible way.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Dispatch.sync_collect">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.Dispatch.sync_collect">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sync_collect</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">actor_infos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ActorInfo</span><span class="p">],</span> <span class="n">object_refs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ObjectRef</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingOutputBatch</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Collects results from the actors synchronously and returns a `TrainingOutputBatch`.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Dispatch.validate_dispatch_args">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.Dispatch.validate_dispatch_args">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_dispatch_args</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate and process arguments for dispatch.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple of (args, kwargs) to be passed to dispatch</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MeshDispatch">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.MeshDispatch">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MeshDispatch</span><span class="p">(</span><span class="n">Dispatch</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mesh dispatch type to dispatch data to a group of actors along the device mesh.</span>
+
+<span class="sd">    Supports DP (Data Parallel), SP (Sequence Parallel), TP (Tensor Parallel) and PP (Pipeline Parallel) parallelism.</span>
+<span class="sd">    The actor method should accept a single argument - the data batch.</span>
+
+<span class="sd">    For data dispatch:</span>
+
+<span class="sd">    * The input data is chunked into `dp_size` equal chunks, where `dp_size` is the size of data parallelism.</span>
+<span class="sd">    * Each actor with the same DP rank processes the same data chunk in parallel.</span>
+
+<span class="sd">    For data collection:</span>
+
+<span class="sd">    * Data is collected only from the primary rank of each model/sequence parallel group.</span>
+<span class="sd">    * The primary rank is defined as the rank with (SP=0, TP=0, PP=0).</span>
+<span class="sd">    * The collected chunks are concatenated in order of DP rank to reconstruct the full data.</span>
+
+<span class="sd">    Example: For a world size of 8, with DP size=2, SP size=2, TP size=2, PP size=1:</span>
+
+<span class="sd">    * Data dispatch: The data is chunked into 2 chunks. All actors with DP rank 0 process the first chunk,</span>
+<span class="sd">      and all actors with DP rank 1 process the second chunk.</span>
+<span class="sd">    * Data collection: Only two actors contribute to the final output - the primary rank from each DP group:</span>
+<span class="sd">      (DP=0, SP=0, TP=0, PP=0) and (DP=1, SP=0, TP=0, PP=0). Their chunks are concatenated in order.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MeshDispatch.dispatch">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.MeshDispatch.dispatch">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dispatch</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">actor_infos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ActorInfo</span><span class="p">],</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">TrainingInputBatch</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ObjectRef</span><span class="p">]:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">actor_infos</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;actor_infos must be a non-empty list&quot;</span>
+        <span class="n">object_refs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">dp_size</span> <span class="o">=</span> <span class="n">actor_infos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="o">.</span><span class="n">dp_size</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">%</span> <span class="n">dp_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;data batch size must be divisible by dp_size, got </span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">dp_size</span>
+        <span class="p">)</span>
+        <span class="n">chunk_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">//</span> <span class="n">dp_size</span>
+        <span class="n">data_chunks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TrainingInputBatch</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">actor_info</span> <span class="ow">in</span> <span class="n">actor_infos</span><span class="p">:</span>
+            <span class="c1"># index into tensordict to get the correct data to send</span>
+            <span class="n">data_to_send</span> <span class="o">=</span> <span class="n">data_chunks</span><span class="p">[</span><span class="n">actor_info</span><span class="o">.</span><span class="n">rank</span><span class="o">.</span><span class="n">dp</span><span class="p">]</span>
+            <span class="n">object_refs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">actor_info</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">data_to_send</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">object_refs</span></div>
+
+
+<div class="viewcode-block" id="MeshDispatch.async_collect">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.MeshDispatch.async_collect">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_collect</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">actor_infos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ActorInfo</span><span class="p">],</span> <span class="n">object_refs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ObjectRef</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingOutputBatch</span><span class="p">]:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">actor_infos</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">object_refs</span><span class="p">),</span> <span class="s2">&quot;`actor_infos` and `object_refs` must have the same length&quot;</span>
+        <span class="n">all_objects</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">object_refs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_objects</span><span class="p">)</span> <span class="ow">and</span> <span class="n">all_objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">concatenate_outputs_after_mesh_dispatch</span><span class="p">(</span><span class="n">actor_infos</span><span class="p">,</span> <span class="n">all_objects</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="MeshDispatch.sync_collect">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.MeshDispatch.sync_collect">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sync_collect</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">actor_infos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ActorInfo</span><span class="p">],</span> <span class="n">object_refs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ObjectRef</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingOutputBatch</span><span class="p">]:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">actor_infos</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">object_refs</span><span class="p">),</span> <span class="s2">&quot;`actor_infos` and `object_refs` must have the same length&quot;</span>
+        <span class="n">all_objects</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">object_refs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_objects</span><span class="p">)</span> <span class="ow">and</span> <span class="n">all_objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">concatenate_outputs_after_mesh_dispatch</span><span class="p">(</span><span class="n">actor_infos</span><span class="p">,</span> <span class="n">all_objects</span><span class="p">)</span>
+        <span class="c1"># all should be none</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">all_objects</span><span class="p">),</span> <span class="s2">&quot;Got a mix of `None` and non-`None` objects&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="MeshDispatch.validate_dispatch_args">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.MeshDispatch.validate_dispatch_args">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_dispatch_args</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">dispatch</span><span class="p">)</span>
+        <span class="c1"># pass dummy actor_infos and method_name</span>
+        <span class="n">bound_args</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">bind</span><span class="p">([],</span> <span class="s2">&quot;dummy&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">bound_args</span><span class="o">.</span><span class="n">apply_defaults</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">bound_args</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check if there are any extra arguments</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bound_args</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1">#  data, actor_infos, method_name</span>
+            <span class="c1"># remove actor_infos and method_name - not added by user</span>
+            <span class="n">bound_args</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;actor_infos&quot;</span><span class="p">)</span>
+            <span class="n">bound_args</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MeshDispatch only accepts &#39;data&#39; as an argument, got extra args: </span><span class="si">{</span><span class="n">bound_args</span><span class="o">.</span><span class="n">arguments</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">bound_args</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">TrainingInputBatch</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;For MeshDispatch, `data` entry should be a `TrainingInput`, got </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="p">,)</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PassThroughDispatch">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.PassThroughDispatch">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PassThroughDispatch</span><span class="p">(</span><span class="n">Dispatch</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;PassThrough dispatch type to dispatch data to a group of actors without any sharding.</span>
+
+<span class="sd">    This is useful for cases where we want to run the same method on all the actors.</span>
+<span class="sd">    Supports methods with any number of arguments.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PassThroughDispatch.dispatch">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.PassThroughDispatch.dispatch">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dispatch</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">actor_infos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ActorInfo</span><span class="p">],</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ObjectRef</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">actor_info</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor_info</span> <span class="ow">in</span> <span class="n">actor_infos</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="PassThroughDispatch.async_collect">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.PassThroughDispatch.async_collect">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_collect</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">actor_infos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ActorInfo</span><span class="p">],</span> <span class="n">object_refs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ObjectRef</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingOutputBatch</span><span class="p">]:</span>
+        <span class="n">all_objects</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">object_refs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_objects</span><span class="p">)</span> <span class="ow">and</span> <span class="n">all_objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">concatenate_outputs_after_mesh_dispatch</span><span class="p">(</span><span class="n">actor_infos</span><span class="p">,</span> <span class="n">all_objects</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PassThroughDispatch.sync_collect">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.PassThroughDispatch.sync_collect">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sync_collect</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">actor_infos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ActorInfo</span><span class="p">],</span> <span class="n">object_refs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ObjectRef</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingOutputBatch</span><span class="p">]:</span>
+        <span class="n">data_batches</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">object_refs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_batches</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">data_batches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">data_batches</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">TrainingOutputBatch</span>
+            <span class="p">),</span> <span class="s2">&quot;data_batches must be a list of `TrainingOutputBatch` objects&quot;</span>
+            <span class="k">return</span> <span class="n">concatenate_outputs_after_mesh_dispatch</span><span class="p">(</span><span class="n">actor_infos</span><span class="p">,</span> <span class="n">data_batches</span><span class="p">)</span>
+        <span class="c1"># all should be none</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">data_batches</span><span class="p">),</span> <span class="s2">&quot;Got a mix of `None` and non-`None` objects&quot;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PassThroughDispatch.validate_dispatch_args">
+<a class="viewcode-back" href="../../../api/trainer.html#skyrl.distributed.dispatch.PassThroughDispatch.validate_dispatch_args">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_dispatch_args</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+        <span class="c1"># no validation needed just pass everything</span>
+        <span class="k">return</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span></div>
+</div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DispatchRegistry</span><span class="p">:</span>
+    <span class="n">_registry</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Dispatch</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;mesh&quot;</span><span class="p">:</span> <span class="n">MeshDispatch</span><span class="p">,</span> <span class="s2">&quot;pass_through&quot;</span><span class="p">:</span> <span class="n">PassThroughDispatch</span><span class="p">}</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dispatch_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Dispatch</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a new dispatch type.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">dispatch_class</span><span class="p">,</span> <span class="n">Dispatch</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">dispatch_class</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">Dispatch</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a registered dispatch type.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dispatch type &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; not registered&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_registered</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Dispatch</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List all registered dispatch types.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">register_dispatch_type</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dispatch_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">DispatchRegistry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">dispatch_class</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">concatenate_outputs_after_mesh_dispatch</span><span class="p">(</span>
+    <span class="n">actor_infos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ActorInfo</span><span class="p">],</span> <span class="n">data_batches</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TrainingOutputBatch</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrainingOutputBatch</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Concatenate data batches from different ranks after mesh dispatch.</span>
+
+<span class="sd">    - Data is collected only from the primary DP rank.</span>
+<span class="sd">    - The collected chunks are concatenated in order of DP rank to reconstruct the full data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">actor_infos</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_batches</span><span class="p">),</span> <span class="s2">&quot;`actor_infos` and `data_batches` must have the same length&quot;</span>
+    <span class="n">shards</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># collect in-order</span>
+    <span class="n">dp_rank_to_shard</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">actor_info</span><span class="p">,</span> <span class="n">data_batch</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">actor_infos</span><span class="p">,</span> <span class="n">data_batches</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">actor_info</span><span class="o">.</span><span class="n">rank</span><span class="o">.</span><span class="n">is_primary_dp_rank</span><span class="p">():</span>
+            <span class="n">dp_rank</span> <span class="o">=</span> <span class="n">actor_info</span><span class="o">.</span><span class="n">rank</span><span class="o">.</span><span class="n">dp</span>
+            <span class="n">dp_rank_to_shard</span><span class="p">[</span><span class="n">dp_rank</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_batch</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">actor_infos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="o">.</span><span class="n">dp_size</span><span class="p">):</span>
+        <span class="n">shards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dp_rank_to_shard</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">TrainingOutputBatch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">shards</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, NovaSkyAI.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

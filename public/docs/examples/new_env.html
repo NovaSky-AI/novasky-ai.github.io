@@ -1,0 +1,362 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creating a New Environment in SkyGym &mdash; SkyTrainer  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Reference" href="../api/index.html" />
+    <link rel="prev" title="Examples" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SkyTrainer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/index.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Creating a New Environment in SkyGym</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#environment-interface">Environment Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simple-single-turn-environment">Simple Single-Turn Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-turn-environment">Multi-Turn Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#registering-your-new-environment">Registering Your New Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#preparing-training-data">Preparing Training Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#training-your-model">Training Your Model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/index.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration/index.html">Configurations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/index.html">Recipes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SkyTrainer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Examples</a></li>
+      <li class="breadcrumb-item active">Creating a New Environment in SkyGym</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/new_env.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="creating-a-new-environment-in-skygym">
+<h1>Creating a New Environment in SkyGym<a class="headerlink" href="#creating-a-new-environment-in-skygym" title="Link to this heading"></a></h1>
+<p>To demonstrate how to create custom environments in SkyGym, let’s build a simple multiplication environment!</p>
+<p>We’ll walk through the complete process: implementing the environment, registering it, preparing training data, and running your first training session.</p>
+<p><strong>What we’re building:</strong> An environment that asks the model to multiply numbers and checks if the answer is correct.</p>
+<section id="environment-interface">
+<h2>Environment Interface<a class="headerlink" href="#environment-interface" title="Link to this heading"></a></h2>
+<p>As discussed in <a class="reference internal" href="../api/env.html"><span class="doc">SkyGym API</span></a>, SkyGym includes a simple text-in/text-out environment interface for LLM tasks, <code class="docutils literal notranslate"><span class="pre">BaseTextEnv</span></code>, which looks like this:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Base environment interface at <code class="docutils literal notranslate"><span class="pre">skyrl/skygym/envs/base_text_env.py</span></code></span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span><span class="w"> </span><span class="nc">BaseTextEnv</span><span class="p">(</span><span class="n">Env</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+<span class="linenos"> 2</span>   <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTextEnvStepOutput</span><span class="p">:</span>
+<span class="linenos"> 3</span><span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 4</span><span class="sd">      Runs one environment step.</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="sd">      Args:</span>
+<span class="linenos"> 7</span><span class="sd">         action: The LLM&#39;s response as a string</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="sd">      Returns:</span>
+<span class="linenos">10</span><span class="sd">         BaseTextEnvStepOutput containing:</span>
+<span class="linenos">11</span><span class="sd">         - observations: New messages from the environment</span>
+<span class="linenos">12</span><span class="sd">         - reward: Float reward for the action</span>
+<span class="linenos">13</span><span class="sd">         - done: Whether the episode is finished</span>
+<span class="linenos">14</span><span class="sd">         - metadata: Additional info (optional)</span>
+<span class="linenos">15</span><span class="sd">      &quot;&quot;&quot;</span>
+<span class="linenos">16</span>      <span class="k">pass</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span>   <span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">19</span>      <span class="k">pass</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span>   <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">22</span>      <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+<p>For our multiplication environment, we only need to implement the <code class="docutils literal notranslate"><span class="pre">step</span></code> method because we don’t have any initialization or cleanup to do.</p>
+</section>
+<section id="simple-single-turn-environment">
+<h2>Simple Single-Turn Environment<a class="headerlink" href="#simple-single-turn-environment" title="Link to this heading"></a></h2>
+<p>Let’s start with a basic version that gives the model only one chance to get the answer right.</p>
+<p>The prompt and response format expected by the <code class="docutils literal notranslate"><span class="pre">multiply</span></code> environment is as follows:</p>
+<ul class="simple">
+<li><p>The model prompt will be a multiplication problem of 2 n-digit numbers, such as “123 * 456” or “999 * 999”.</p></li>
+<li><p>The model output should be in the format of <code class="docutils literal notranslate"><span class="pre">\\boxed{answer}</span></code>, where <code class="docutils literal notranslate"><span class="pre">answer</span></code> is the product of the two numbers.</p></li>
+</ul>
+<p>So, the environment <code class="docutils literal notranslate"><span class="pre">step</span></code> must simply parse the answer out of <code class="docutils literal notranslate"><span class="pre">\\boxed{answer}</span></code> and check if it matches the ground truth.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Simple multiplication environment in <code class="docutils literal notranslate"><span class="pre">examples/multiply/env.py</span></code></span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span><span class="w"> </span><span class="nc">MultiplyEnv</span><span class="p">(</span><span class="n">BaseTextEnv</span><span class="p">):</span>
+<span class="linenos"> 2</span>   <span class="k">def</span><span class="w"> </span><span class="nf">_parse_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="linenos"> 3</span><span class="w">      </span><span class="sd">&quot;&quot;&quot;Extract answer from \\boxed{answer} format&quot;&quot;&quot;</span>
+<span class="linenos"> 4</span>      <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">boxed\{([^}]+)\}&quot;</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+<span class="linenos"> 5</span>      <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">match</span> <span class="k">else</span> <span class="kc">None</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>   <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTextEnvStepOutput</span><span class="p">:</span>
+<span class="linenos"> 8</span>      <span class="n">answer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_action</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+<span class="linenos"> 9</span>      <span class="n">is_correct</span> <span class="o">=</span> <span class="n">answer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">answer</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ground_truth</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>      <span class="k">return</span> <span class="n">BaseTextEnvStepOutput</span><span class="p">(</span>
+<span class="linenos">12</span>         <span class="n">observations</span><span class="o">=</span><span class="p">[],</span>
+<span class="linenos">13</span>         <span class="n">reward</span><span class="o">=</span><span class="mf">1.0</span> <span class="k">if</span> <span class="n">is_correct</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">,</span>
+<span class="linenos">14</span>         <span class="n">done</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">15</span>         <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;parsed_answer&quot;</span><span class="p">:</span> <span class="n">answer</span><span class="p">}</span>
+<span class="linenos">16</span>      <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>That’s it! The environment checks if the model’s answer matches the ground truth and gives a reward of 1.0 for correct answers, 0.0 for incorrect ones.</p>
+</section>
+<section id="multi-turn-environment">
+<h2>Multi-Turn Environment<a class="headerlink" href="#multi-turn-environment" title="Link to this heading"></a></h2>
+<p>Want to give the model multiple attempts? Let’s extend our environment to allow multiple turns.</p>
+<p>We will make a few simple extensions to our <code class="docutils literal notranslate"><span class="pre">step()</span></code> method:</p>
+<ul class="simple">
+<li><p>Keep track of the number of turns (<code class="docutils literal notranslate"><span class="pre">self.turns</span></code>) and indicate the trajectory is <code class="docutils literal notranslate"><span class="pre">done</span></code> after a configured maximum number of turns (<code class="docutils literal notranslate"><span class="pre">self.max_turns</span></code>)</p></li>
+<li><p>If the turns expire or the model provides a correct answer, we indicate the trajectory is <code class="docutils literal notranslate"><span class="pre">done</span></code> and return a reward as follows:</p>
+<ul>
+<li><p>Correct answer: 1.0.</p></li>
+<li><p>Incorrect answer, but in format of <code class="docutils literal notranslate"><span class="pre">\\boxed{...}</span></code>: 0.5.</p></li>
+<li><p>Incorrect answer, and not in format of <code class="docutils literal notranslate"><span class="pre">\\boxed{...}</span></code>: 0.0.</p></li>
+</ul>
+</li>
+<li><p>If the model is incorrect and has more turns remaining, we also provide feedback as a new <code class="docutils literal notranslate"><span class="pre">observation</span></code>.</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Multi-turn multiplication environment in <code class="docutils literal notranslate"><span class="pre">examples/multiply/env.py</span></code></span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTextEnvStepOutput</span><span class="p">:</span>
+<span class="linenos"> 2</span>     <span class="bp">self</span><span class="o">.</span><span class="n">turns</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos"> 3</span>     <span class="n">answer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_action</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+<span class="linenos"> 4</span>     <span class="n">is_correct</span> <span class="o">=</span> <span class="n">answer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">answer</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ground_truth</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="linenos"> 5</span>     <span class="n">found_boxed</span> <span class="o">=</span> <span class="n">answer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>     <span class="c1"># Episode ends if max turns reached or correct answer found</span>
+<span class="linenos"> 8</span>     <span class="n">done</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">turns</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_turns</span> <span class="ow">or</span> <span class="n">is_correct</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>     <span class="c1"># Reward structure:</span>
+<span class="linenos">11</span>     <span class="c1"># - Correct answer: 1.0</span>
+<span class="linenos">12</span>     <span class="c1"># - Wrong answer in correct format: 0.5</span>
+<span class="linenos">13</span>     <span class="c1"># - No boxed answer: 0.0</span>
+<span class="linenos">14</span>     <span class="k">if</span> <span class="n">is_correct</span><span class="p">:</span>
+<span class="linenos">15</span>         <span class="n">reward</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="linenos">16</span>     <span class="k">elif</span> <span class="n">found_boxed</span><span class="p">:</span>
+<span class="linenos">17</span>         <span class="n">reward</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="linenos">18</span>     <span class="k">else</span><span class="p">:</span>
+<span class="linenos">19</span>         <span class="n">reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span>     <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+<span class="linenos">22</span>         <span class="k">return</span> <span class="n">BaseTextEnvStepOutput</span><span class="p">(</span>
+<span class="linenos">23</span>             <span class="n">observations</span><span class="o">=</span><span class="p">[],</span>
+<span class="linenos">24</span>             <span class="n">reward</span><span class="o">=</span><span class="n">reward</span><span class="p">,</span>
+<span class="linenos">25</span>             <span class="n">done</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">26</span>             <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;parsed_answer&quot;</span><span class="p">:</span> <span class="n">answer</span><span class="p">}</span>
+<span class="linenos">27</span>         <span class="p">)</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span>     <span class="c1"># Give feedback for another attempt</span>
+<span class="linenos">30</span>     <span class="k">if</span> <span class="n">answer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">31</span>         <span class="n">feedback</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Your answer &#39;</span><span class="si">{</span><span class="n">answer</span><span class="si">}</span><span class="s2">&#39; is incorrect. Please try again.&quot;</span>
+<span class="linenos">32</span>     <span class="k">else</span><span class="p">:</span>
+<span class="linenos">33</span>         <span class="n">feedback</span> <span class="o">=</span> <span class="s2">&quot;Please provide your answer in the format </span><span class="se">\\</span><span class="s2">boxed</span><span class="si">{your_answer}</span><span class="s2">.&quot;</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span>     <span class="k">return</span> <span class="n">BaseTextEnvStepOutput</span><span class="p">(</span>
+<span class="linenos">36</span>         <span class="n">observations</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">feedback</span><span class="p">}],</span>
+<span class="linenos">37</span>         <span class="n">reward</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+<span class="linenos">38</span>         <span class="n">done</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos">39</span>         <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;parsed_answer&quot;</span><span class="p">:</span> <span class="n">answer</span><span class="p">}</span>
+<span class="linenos">40</span>     <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The multi-turn version gives partial credit for formatting the answer correctly, even if it’s wrong. This helps the model learn the expected output format.</p>
+<p>The final implementation is available in <code class="docutils literal notranslate"><span class="pre">examples/multiply/env.py</span></code>.</p>
+</section>
+<section id="registering-your-new-environment">
+<h2>Registering Your New Environment<a class="headerlink" href="#registering-your-new-environment" title="Link to this heading"></a></h2>
+<p>Finally, we need to <code class="docutils literal notranslate"><span class="pre">register</span></code> the new environment so the training stack can find it by name.</p>
+<p>We will create a new entrypoint for training with the <code class="docutils literal notranslate"><span class="pre">multiply</span></code> environment by creating a file at <code class="docutils literal notranslate"><span class="pre">examples/multiply/main_multiply.py</span></code> that looks like this:</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">Environment registration</span><a class="headerlink" href="#id4" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># Register the multiply environment.</span>
+<span class="linenos"> 2</span><span class="n">register</span><span class="p">(</span>
+<span class="linenos"> 3</span>   <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;multiply&quot;</span><span class="p">,</span>  <span class="c1"># &lt;-- The name of the environment.</span>
+<span class="linenos"> 4</span>   <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;examples.multiply.env:MultiplyEnv&quot;</span><span class="p">,</span>  <span class="c1"># &lt;-- The path to the environment class.</span>
+<span class="linenos"> 5</span><span class="p">)</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">num_cpus</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 8</span><span class="k">def</span><span class="w"> </span><span class="nf">skyrl_entrypoint</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">DictConfig</span><span class="p">):</span>
+<span class="linenos"> 9</span>   <span class="c1"># make sure that the training loop is not run on the head node.</span>
+<span class="linenos">10</span>   <span class="n">exp</span> <span class="o">=</span> <span class="n">BasePPOExp</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+<span class="linenos">11</span>   <span class="n">exp</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="nd">@hydra</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="n">config_dir</span><span class="p">,</span> <span class="n">config_name</span><span class="o">=</span><span class="s2">&quot;ppo_base_config&quot;</span><span class="p">,</span> <span class="n">version_base</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="linenos">14</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">DictConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">15</span>   <span class="c1"># validate the arguments</span>
+<span class="linenos">16</span>   <span class="n">validate_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span>   <span class="n">initialize_ray</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+<span class="linenos">19</span>   <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">skyrl_entrypoint</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">cfg</span><span class="p">))</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">22</span>   <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>Now, the training stack can simply build the new environment with <code class="docutils literal notranslate"><span class="pre">skygym.make(&quot;multiply&quot;)</span></code>!</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All code written in this document is <em>outside</em> of the <code class="docutils literal notranslate"><span class="pre">skyrl</span></code> package. There is no need to fork and edit <code class="docutils literal notranslate"><span class="pre">skyrl</span></code> code – just import <code class="docutils literal notranslate"><span class="pre">skyrl</span></code>, implement and register your environment, and the training stack can find the environment seamlessly!</p>
+</div>
+</section>
+<section id="preparing-training-data">
+<h2>Preparing Training Data<a class="headerlink" href="#preparing-training-data" title="Link to this heading"></a></h2>
+<p>Before we can train, we need a dataset of problems to train on.</p>
+<p>We can generate a dataset of multiplication problems using <code class="docutils literal notranslate"><span class="pre">examples/multiply/multiply_dataset.py</span></code>. See the file for more details, but the core idea is to generate random multiplication problems of n-digit numbers, and ensure the dataset example is in the correct format:</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">Generating a dataset of random multiplication problems</span><a class="headerlink" href="#id5" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_examples</span><span class="p">):</span>
+<span class="linenos"> 2</span>     <span class="n">question</span><span class="p">,</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">generate_multiplication_problem</span><span class="p">(</span><span class="n">num_digits</span><span class="p">)</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+<span class="linenos"> 5</span>         <span class="s2">&quot;data_source&quot;</span><span class="p">:</span> <span class="s2">&quot;synthetic_multiply&quot;</span><span class="p">,</span>
+<span class="linenos"> 6</span>         <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="p">[</span>
+<span class="linenos"> 7</span>             <span class="n">system_prompt</span><span class="p">,</span>
+<span class="linenos"> 8</span>             <span class="p">{</span>
+<span class="linenos"> 9</span>                 <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+<span class="linenos">10</span>                 <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span>
+<span class="linenos">11</span>             <span class="p">}</span>
+<span class="linenos">12</span>         <span class="p">],</span>
+<span class="linenos">13</span>         <span class="s2">&quot;env_class&quot;</span><span class="p">:</span> <span class="s2">&quot;multiply&quot;</span><span class="p">,</span>
+<span class="linenos">14</span>         <span class="s2">&quot;reward_spec&quot;</span><span class="p">:</span> <span class="p">{</span>
+<span class="linenos">15</span>             <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span>
+<span class="linenos">16</span>             <span class="s2">&quot;ground_truth&quot;</span><span class="p">:</span> <span class="n">answer</span><span class="p">,</span>
+<span class="linenos">17</span>         <span class="p">},</span>
+<span class="linenos">18</span>         <span class="s2">&quot;extra_info&quot;</span><span class="p">:</span> <span class="p">{</span>
+<span class="linenos">19</span>             <span class="s2">&quot;num_digits&quot;</span><span class="p">:</span> <span class="n">num_digits</span><span class="p">,</span>
+<span class="linenos">20</span>             <span class="s2">&quot;split&quot;</span><span class="p">:</span> <span class="n">split_name</span><span class="p">,</span>
+<span class="linenos">21</span>         <span class="p">},</span>
+<span class="linenos">22</span>     <span class="p">}</span>
+<span class="linenos">23</span>     <span class="n">examples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>See <a class="reference internal" href="../datasets/dataset-preparation.html"><span class="doc">Dataset Preparation</span></a> for more details on the required dataset format and how to prepare your own dataset.</p>
+<p>Now we can generate the datsaet:</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">Generate training data</span><a class="headerlink" href="#id6" title="Link to this code"></a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>uv<span class="w"> </span>run<span class="w"> </span>--isolated<span class="w"> </span>examples/multiply/multiply_dataset.py<span class="w"> </span><span class="se">\</span>
+<span class="linenos">2</span><span class="w">  </span>--output_dir<span class="w"> </span><span class="nv">$HOME</span>/data/multiply<span class="w"> </span><span class="se">\</span>
+<span class="linenos">3</span><span class="w">  </span>--num_digits<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos">4</span><span class="w">  </span>--train_size<span class="w"> </span><span class="m">10000</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos">5</span><span class="w">  </span>--test_size<span class="w"> </span><span class="m">200</span>
+</pre></div>
+</div>
+</div>
+<p>This creates <code class="docutils literal notranslate"><span class="pre">train.parquet</span></code> and <code class="docutils literal notranslate"><span class="pre">test.parquet</span></code> files in the <code class="docutils literal notranslate"><span class="pre">$HOME/data/multiply</span></code> directory.</p>
+</section>
+<section id="training-your-model">
+<h2>Training Your Model<a class="headerlink" href="#training-your-model" title="Link to this heading"></a></h2>
+<p>Time to train! 🚀</p>
+<p>First, make sure your config matches your available GPUs. You may need to adjust the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">trainer.placement.policy_num_gpus_per_node</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generator.num_llm_endpoints</span></code></p></li>
+</ul>
+<p>Then start training:</p>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">Run training</span><a class="headerlink" href="#id7" title="Link to this code"></a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nb">export</span><span class="w"> </span><span class="nv">WANDB_API_KEY</span><span class="o">=</span>your_wandb_api_key
+<span class="linenos">2</span>bash<span class="w"> </span>examples/multiply/run_multiply.sh
+</pre></div>
+</div>
+</div>
+<p><strong>Next Steps:</strong> Want to make multiplication easier? Try integrating a calculator tool into your environment! Check out the Tools documentation for details.</p>
+<p>That’s it! You’ve created a custom environment, prepared training data, and started training. The same pattern works for any text-based task you want to train on.</p>
+<p>Now watch your model become a multiplication master!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, NovaSkyAI.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

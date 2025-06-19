@@ -1,0 +1,50 @@
+Installation
+============
+
+Requirements
+------------
+- CUDA version >=12.4
+- `uv <https://docs.astral.sh/uv/>`_
+- `ray <https://docs.ray.io/en/latest/>`_
+
+We use `uv <https://docs.astral.sh/uv/>`_ to manage dependencies. We also make use of the `uv` and `ray` integration to manage dependencies for ray workers.
+
+We recommend having a base virtual environment for the project.
+
+.. code-block:: bash
+
+    uv venv --python 3.12 <path_to_venv>
+
+If ``<path_to_venv>`` is not specified, the virtual environment will be created in the current directory at ``.venv``.
+
+Then activate the virtual environment and install the dependencies.
+
+.. code-block:: bash
+
+    source <path_to_venv>/bin/activate
+    uv sync
+
+Dockerfile
+----------
+
+.. code-block:: dockerfile
+
+    FROM anyscale/ray:2.44.0-slim-py310-cu123
+
+    RUN sudo apt-get update -y && sudo apt-get install -y wget kmod libxml2 build-essential libnuma-dev
+
+    RUN wget https://developer.download.nvidia.com/compute/cuda/12.3.0/local_installers/cuda_12.3.0_545.23.06_linux.run
+    RUN sudo sh cuda_12.3.0_545.23.06_linux.run --silent --toolkit
+    RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+    RUN echo "export RAY_RUNTIME_ENV_HOOK=ray._private.runtime_env.uv_runtime_env_hook.hook" >> /home/ray/.bashrc
+    RUN sudo apt-get update \
+        && sudo apt-get install -y openssh-server iputils-ping net-tools iproute2 traceroute netcat \
+        libopenexr-dev libxi-dev libglfw3-dev libglew-dev libomp-dev libxinerama-dev libxcursor-dev tzdata
+    RUN sudo apt update && sudo apt install --fix-broken && sudo apt install -y default-jre-headless openjdk-8-jdk
+
+
+For development, make sure to use ``--extra dev`` so that the dev dependencies are included.
+
+.. code-block:: bash
+
+    uv run --extra dev --isolated examples/gsm8k/run_gsm8k.sh
