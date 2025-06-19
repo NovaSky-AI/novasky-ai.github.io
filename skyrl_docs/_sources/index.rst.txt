@@ -1,0 +1,17 @@
+Welcome to SkyTrainer's documentation!
+================================
+
+SkyTrainer is a reinforcement learning framework designed for efficient and scalable training. 
+
+Oh what's that? Why is it different from SkyRL? Shush!
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   getting-started/index
+   examples/index
+   api/index
+   datasets/index
+   configuration/index
+   recipes/index
