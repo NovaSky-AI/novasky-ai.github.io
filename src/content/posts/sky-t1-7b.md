@@ -92,7 +92,7 @@ In this blog post, we show that RL can further enhance the model's capability on
 
 
 ## Acknowledgement
-This work is done at [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/) with generous compute support from [Anyscale](https://www.anyscale.com/), [Databricks](https://www.databricks.com/), and [Lambda Labs](https://lambdalabs.com/service/gpu-cloud?srsltid=AfmBOop5FnmEFTkavVtdZDsLWvHWNg6peXtat-OXJ9MW5GMNsk756PE5).
+This work is done at [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/) with generous compute support from [Anyscale](https://www.anyscale.com/), [Databricks](https://www.databricks.com/), and [Lambda](https://lambda.ai/).
 
 
 ## Citation

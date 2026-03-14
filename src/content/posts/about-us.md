@@ -113,7 +113,7 @@ NovaSky is a collaborative initiative led by students and advisors at UC Berkele
 
 
 ### Acknowledgement
-Members are funded by the [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/). The compute resources are also generously supported by [Lambda Labs](https://lambdalabs.com/) and [Anyscale](https://www.anyscale.com/).
+Members are funded by the [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/). The compute resources are also generously supported by [Lambda](https://lambda.ai/) and [Anyscale](https://www.anyscale.com/).
 
 ### Contact
 X: [@NovaSkyAI](https://x.com/NovaSkyAI)
